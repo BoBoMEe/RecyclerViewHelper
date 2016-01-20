@@ -40,7 +40,7 @@ import com.yaodu.drug.util.ToastUtil;
 
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements IConstant{
+public class MainActivity extends AppCompatActivity implements IConstant {
 
     private TextView text1;
 
@@ -75,16 +75,6 @@ public class MainActivity extends AppCompatActivity implements IConstant{
 
         }
     }
-
-//    StringBuilder stringBuilder = new StringBuilder();
-//    stringBuilder.append("platform :" + platform).append(",").append("\n");
-//
-//    for (Map.Entry<String, Object> entry : res.entrySet()) {
-//        stringBuilder.append(entry.getKey()).append(":").append(entry.getValue().toString()).append("\n");
-//    }
-//
-//    text1.setText(stringBuilder.toString());
-
 
     //====================================QQ====================================================
     private final int INFO = 0;
@@ -133,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements IConstant{
                 userInfo.getUserInfo(new BaseUiListener(MainActivity.this, INFO));
             } else {
                 qqInfoModel = GsonUtil.jsonToBean(values.toString(), QQInfoModel.class);
+
+                text1.setText(qqInfoModel.toString());
             }
 
         }
@@ -247,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements IConstant{
             if (!TextUtils.isEmpty(response)) {
                 // 调用 User#parse 将JSON串解析成User对象
                 User user = User.parse(response);
+                text1.setText(user.toString());
             }
         }
 
@@ -321,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements IConstant{
                 ToastUtil.show(this, "获取respCode失败");
                 return;
             } else {
-                ThreadManager.getShortPool().execute(new Runnable(){
+                ThreadManager.getShortPool().execute(new Runnable() {
                     @Override
                     public void run() {
                         tokenModel = WeixinTokenService.getWeixinToken(weixinCode);
@@ -331,6 +324,7 @@ public class MainActivity extends AppCompatActivity implements IConstant{
 
                             if (!TextUtils.isEmpty(tokenModel.access_token) && !TextUtils.isEmpty(tokenModel.openid)) {
                                 infoModel = WeixinInfoService.getWeixinInfo(accessToken, openId);
+                                text1.setText(infoModel.toString());
                             } else {
                                 ToastUtil.show(MainActivity.this, "授权userInfo失败");
                             }

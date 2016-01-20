@@ -22,5 +22,19 @@ public class WeixinInfoModel {
 
     public String unionid;
 
-
+    @Override
+    public String toString() {
+        return "WeixinInfoModel{" + "\n" +
+                "openid='" + openid + '\'' + "\n" +
+                ", nickname='" + nickname + '\'' + "\n" +
+                ", sex=" + sex + "\n" +
+                ", language='" + language + '\'' + "\n" +
+                ", city='" + city + '\'' + "\n" +
+                ", province='" + province + '\'' + "\n" +
+                ", country='" + country + '\'' + "\n" +
+                ", headimgurl='" + headimgurl + '\'' + "\n" +
+                ", privilege=" + privilege + "\n" +
+                ", unionid='" + unionid + '\'' +
+                '}';
+    }
 }
