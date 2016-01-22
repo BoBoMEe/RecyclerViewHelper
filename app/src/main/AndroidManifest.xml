@@ -50,7 +50,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent" />
+                <data android:scheme="tencent1104445688" />
                 <!--官方测试用的appid222222-->
             </intent-filter>
         </activity>

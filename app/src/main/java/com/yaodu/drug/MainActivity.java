@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements IConstant {
             } else {
                 qqInfoModel = GsonUtil.jsonToBean(values.toString(), QQInfoModel.class);
 
-                text1.setText(qqInfoModel.toString());
+                runOnUiThread(()->text1.setText(qqInfoModel.toString()));
             }
 
         }
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements IConstant {
                 if (!TextUtils.isEmpty(code)) {
                     message = message + "\nObtained the code: " + code;
                 }
-                ToastUtil.show(MainActivity.this, message);
+               ToastUtil.show(MainActivity.this, message);
             }
         }
 
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements IConstant {
             if (!TextUtils.isEmpty(response)) {
                 // 调用 User#parse 将JSON串解析成User对象
                 User user = User.parse(response);
-                text1.setText(user.toString());
+                runOnUiThread(() -> text1.setText(user.toString()));
             }
         }
 
@@ -310,32 +310,20 @@ public class MainActivity extends AppCompatActivity implements IConstant {
             // code返回
             final String weixinCode = ((SendAuth.Resp) resp).code;
 
-            if (TextUtils.isEmpty(weixinCode)) {
-                ToastUtil.show(this, "获取respCode失败");
-                return;
-            } else {
-                ThreadManager.getShortPool().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        tokenModel = WeixinTokenService.getWeixinToken(weixinCode);
-                        if (null != tokenModel) {
-                            String accessToken = tokenModel.access_token;
-                            String openId = tokenModel.openid;
+            if (!TextUtils.isEmpty(weixinCode)) {
+                ThreadManager.getShortPool().execute(() -> {
+                    tokenModel = WeixinTokenService.getWeixinToken(weixinCode);
+                    if (null != tokenModel) {
+                        String accessToken = tokenModel.access_token;
+                        String openId = tokenModel.openid;
 
-                            if (!TextUtils.isEmpty(tokenModel.access_token) && !TextUtils.isEmpty(tokenModel.openid)) {
-                                infoModel = WeixinInfoService.getWeixinInfo(accessToken, openId);
-                                text1.setText(infoModel.toString());
-                            } else {
-                                ToastUtil.show(MainActivity.this, "授权userInfo失败");
-                            }
-
-                        } else {
-                            ToastUtil.show(MainActivity.this, "获取token失败");
+                        if (!TextUtils.isEmpty(tokenModel.access_token) && !TextUtils.isEmpty(tokenModel.openid)) {
+                            infoModel = WeixinInfoService.getWeixinInfo(accessToken, openId);
+                            runOnUiThread(() -> text1.setText(infoModel.toString()));
                         }
                     }
                 });
             }
-
         }
     }
     //=============================================================================================
