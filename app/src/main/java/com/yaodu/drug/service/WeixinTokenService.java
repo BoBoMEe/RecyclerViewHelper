@@ -1,7 +1,7 @@
 package com.yaodu.drug.service;
 
 
-import com.yaodu.drug.IConstant;
+import com.yaodu.drug.interfaces.IConstant;
 import com.yaodu.drug.model.WeixinTokenModel;
 import com.yaodu.drug.util.EncodeUtil;
 

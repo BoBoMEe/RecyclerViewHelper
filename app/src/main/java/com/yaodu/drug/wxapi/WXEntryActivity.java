@@ -25,11 +25,12 @@ import android.widget.Toast;
 
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.yaodu.drug.Constant;
-import com.yaodu.drug.IConstant;
+import com.yaodu.drug.loginmanager.ObserverManager;
+import com.yaodu.drug.interfaces.IConstant;
 
 /**
  * 微信授权登录后的回调
@@ -50,6 +51,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler, ICo
         api.registerApp(APP_ID);
 
         api.handleIntent(getIntent(), this);
+
     }
 
     @Override
@@ -71,8 +73,9 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler, ICo
     public void onResp(BaseResp resp) {
         switch (resp.errCode) {
             case BaseResp.ErrCode.ERR_OK:
-                Constant.baseResp = resp;
-                finish();
+
+                ObserverManager.getInstance().notify(WEIXINLOGINOBSERVER, this, ((SendAuth.Resp) resp).code);
+
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
                 Toast.makeText(this, "取消!", Toast.LENGTH_LONG).show();
