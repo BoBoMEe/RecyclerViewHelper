@@ -86,6 +86,7 @@ public class WeiXinLogin implements ILogin, IConstant, ObserverManager.MRObserve
                             if (null != iLoginCallback) iLoginCallback.infoCallBack(infoModel);
                         }
                     }
+                     ObserverManager.getInstance().removeObserver(this);
                 }
             });
         }
