@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">drug</string>
-    <string name="action_settings">Settings</string>
+  <string name="app_name">RecyclerViewHelperDemo</string>
+  <string name="add">add</string>
 </resources>
