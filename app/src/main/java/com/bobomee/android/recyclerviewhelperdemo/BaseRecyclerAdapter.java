@@ -41,6 +41,16 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
     notifyItemRemoved(pos);
   }
 
+  public void addAll(List<T> items) {
+    mData.addAll(mData.size(), items);
+    notifyItemRangeInserted(mData.size(), items.size());
+  }
+
+  public void clear(){
+    mData.clear();
+    notifyDataSetChanged();
+  }
+
   abstract public void bindData(RecyclerViewHolder holder, int position, T item);
 
   abstract public int getItemLayoutId(int viewType);
