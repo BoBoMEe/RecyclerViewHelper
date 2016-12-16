@@ -14,13 +14,15 @@
  *  limitations under the License.
  */
 
-package com.bobomee.android.recyclerviewhelperdemo;
+package com.bobomee.android.recyclerviewhelperdemo.pager;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
 import com.bobomee.android.recyclerviewhelper.paginate.Paginate;
+import com.bobomee.android.recyclerviewhelperdemo.DataProvider;
 
 /**
  * Created on 2016/12/9.下午1:31.
@@ -29,7 +31,7 @@ import com.bobomee.android.recyclerviewhelper.paginate.Paginate;
  *         https://github.com/BoBoMEe
  */
 
-public class PaginateActivity extends MainActivity
+public class PaginateFragment extends ItemSelectFragment
     implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener {
 
   private boolean loading = false;
@@ -37,8 +39,8 @@ public class PaginateActivity extends MainActivity
   private Handler handler;
   private Paginate paginate;
 
-  @Override protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-    super.onPostCreate(savedInstanceState);
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     handler = new Handler();
     setupPagination();
 
