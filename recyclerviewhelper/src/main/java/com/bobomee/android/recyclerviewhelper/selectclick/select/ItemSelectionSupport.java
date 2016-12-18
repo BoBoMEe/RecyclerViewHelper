@@ -1,23 +1,38 @@
-package com.bobomee.android.recyclerviewhelper.selectmode;
+/*
+ * Copyright (C) 2016.  BoBoMEe(wbwjx115@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package com.bobomee.android.recyclerviewhelper.selectclick.select;
 
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Checkable;
+import com.bobomee.android.recyclerviewhelper.selectclick.ItemTouchListener;
+import java.util.List;
 
 import static android.os.Build.VERSION_CODES.HONEYCOMB;
 
 public class ItemSelectionSupport {
   private static final int INVALID_POSITION = -1;
-  private OnItemSelectListener onItemSelectListener;
-  private OnItemSelectChangeListener onItemSelectChangeListener;
+  //private ItemSelectionSupportManager.OnItemSelectListener onItemSelectListener;
+  //private ItemSelectionSupportManager.OnItemSelectChangeListener onItemSelectChangeListener;
 
   public enum ChoiceMode {
     NONE,
@@ -29,8 +44,8 @@ public class ItemSelectionSupport {
   private final TouchListener mTouchListener;
 
   private ChoiceMode mChoiceMode = ChoiceMode.NONE;
-  private CheckedStates mCheckedStates;
-  private CheckedIdStates mCheckedIdStates;
+  private StateManager.CheckedStates mCheckedStates;
+  private StateManager.CheckedIdStates mCheckedIdStates;
   private int mCheckedCount;
 
   private static final String STATE_KEY_CHOICE_MODE = "choiceMode";
@@ -48,12 +63,8 @@ public class ItemSelectionSupport {
 
   public static ItemSelectionSupport from(RecyclerView _recyclerView) {
     if (null == _recyclerView) return null;
-    return new ItemSelectionSupport(_recyclerView);
-  }
-
-  public ItemSelectionSupport add() {
-    mRecyclerView.addOnItemTouchListener(mTouchListener);
-    return this;
+    ItemSelectionSupport itemSelectionSupport = new ItemSelectionSupport(_recyclerView);
+    return itemSelectionSupport;
   }
 
   public ItemSelectionSupport remove() {
@@ -61,10 +72,13 @@ public class ItemSelectionSupport {
     return this;
   }
 
+  public ItemSelectionSupport add() {
+    mRecyclerView.addOnItemTouchListener(mTouchListener);
+    return this;
+  }
+
   private void updateOnScreenCheckedViews() {
-    if (null != onItemSelectChangeListener) {
-      onItemSelectChangeListener.onItenSelectChange(mCheckedStates);
-    }
+    ItemSelectionSupportManager.notifyChage(mCheckedStates);
     final int count = mRecyclerView.getChildCount();
     for (int i = 0; i < count; i++) {
       final View child = mRecyclerView.getChildAt(i);
@@ -230,12 +244,21 @@ public class ItemSelectionSupport {
       }
     }
 
-    if (null != onItemSelectListener) {
-      onItemSelectListener.onItemSelect(mRecyclerView, mRecyclerView.getChildAt(position), position,
-          checked);
-    }
+    notifySelected(position, checked);
 
     updateOnScreenCheckedViews();
+  }
+
+  private void notifySelected(int position, boolean checked) {
+    List<ItemSelectionSupportManager.OnItemSelectListener> onItemSelectListeners =
+        ItemSelectionSupportManager.fromSelectListener();
+
+    if (null != onItemSelectListeners && !onItemSelectListeners.isEmpty()) {
+      for (ItemSelectionSupportManager.OnItemSelectListener onItemSelectListener : onItemSelectListeners) {
+        onItemSelectListener.onItemSelect(mRecyclerView, mRecyclerView.getChildAt(position),
+            position, checked);
+      }
+    }
   }
 
   @TargetApi(HONEYCOMB) public void setViewChecked(View view, boolean checked) {
@@ -293,57 +316,12 @@ public class ItemSelectionSupport {
   private void ensureStates() {
     if (mChoiceMode != ChoiceMode.NONE) {
       if (mCheckedStates == null) {
-        mCheckedStates = new CheckedStates();
+        mCheckedStates = new StateManager.CheckedStates();
       }
 
       final Adapter adapter = mRecyclerView.getAdapter();
       if (mCheckedIdStates == null && adapter != null && adapter.hasStableIds()) {
-        mCheckedIdStates = new CheckedIdStates();
-      }
-    }
-  }
-
-  public void onAdapterDataChanged() {
-    final Adapter adapter = mRecyclerView.getAdapter();
-    if (mChoiceMode == ChoiceMode.NONE || adapter == null || !adapter.hasStableIds()) {
-      return;
-    }
-
-    final int itemCount = adapter.getItemCount();
-
-    ensureStates();
-
-    // Clear out the positional check states, we'll rebuild it below from IDs.
-    mCheckedStates.clear();
-
-    for (int checkedIndex = 0; checkedIndex < mCheckedIdStates.size(); checkedIndex++) {
-      final long currentId = mCheckedIdStates.keyAt(checkedIndex);
-      final int currentPosition = mCheckedIdStates.valueAt(checkedIndex);
-
-      final long newPositionId = adapter.getItemId(currentPosition);
-      if (currentId != newPositionId) {
-        // Look around to see if the ID is nearby. If not, uncheck it.
-        final int start = Math.max(0, currentPosition - CHECK_POSITION_SEARCH_DISTANCE);
-        final int end = Math.min(currentPosition + CHECK_POSITION_SEARCH_DISTANCE, itemCount);
-
-        boolean found = false;
-        for (int searchPos = start; searchPos < end; searchPos++) {
-          final long searchId = adapter.getItemId(searchPos);
-          if (currentId == searchId) {
-            found = true;
-            mCheckedStates.put(searchPos, true);
-            mCheckedIdStates.setValueAt(checkedIndex, searchPos);
-            break;
-          }
-        }
-
-        if (!found) {
-          mCheckedIdStates.delete(currentId);
-          mCheckedCount--;
-          checkedIndex--;
-        }
-      } else {
-        mCheckedStates.put(currentPosition, true);
+        mCheckedIdStates = new StateManager.CheckedIdStates();
       }
     }
   }
@@ -368,98 +346,13 @@ public class ItemSelectionSupport {
     // TODO confirm ids here
   }
 
-  public static class CheckedStates extends SparseBooleanArray implements Parcelable {
-    private static final int FALSE = 0;
-    private static final int TRUE = 1;
-
-    public CheckedStates() {
-      super();
-    }
-
-    private CheckedStates(Parcel in) {
-      final int size = in.readInt();
-      if (size > 0) {
-        for (int i = 0; i < size; i++) {
-          final int key = in.readInt();
-          final boolean value = (in.readInt() == TRUE);
-          put(key, value);
-        }
-      }
-    }
-
-    @Override public int describeContents() {
-      return 0;
-    }
-
-    @Override public void writeToParcel(Parcel parcel, int flags) {
-      final int size = size();
-      parcel.writeInt(size);
-
-      for (int i = 0; i < size; i++) {
-        parcel.writeInt(keyAt(i));
-        parcel.writeInt(valueAt(i) ? TRUE : FALSE);
-      }
-    }
-
-    public static final Creator<CheckedStates> CREATOR =
-        new Creator<CheckedStates>() {
-          @Override public CheckedStates createFromParcel(Parcel in) {
-            return new CheckedStates(in);
-          }
-
-          @Override public CheckedStates[] newArray(int size) {
-            return new CheckedStates[size];
-          }
-        };
-  }
-
-  private static class CheckedIdStates extends LongSparseArray<Integer> implements Parcelable {
-    public CheckedIdStates() {
-      super();
-    }
-
-    private CheckedIdStates(Parcel in) {
-      final int size = in.readInt();
-      if (size > 0) {
-        for (int i = 0; i < size; i++) {
-          final long key = in.readLong();
-          final int value = in.readInt();
-          put(key, value);
-        }
-      }
-    }
-
-    @Override public int describeContents() {
-      return 0;
-    }
-
-    @Override public void writeToParcel(Parcel parcel, int flags) {
-      final int size = size();
-      parcel.writeInt(size);
-
-      for (int i = 0; i < size; i++) {
-        parcel.writeLong(keyAt(i));
-        parcel.writeInt(valueAt(i));
-      }
-    }
-
-    public static final Creator<CheckedIdStates> CREATOR = new Creator<CheckedIdStates>() {
-      @Override public CheckedIdStates createFromParcel(Parcel in) {
-        return new CheckedIdStates(in);
-      }
-
-      @Override public CheckedIdStates[] newArray(int size) {
-        return new CheckedIdStates[size];
-      }
-    };
-  }
-
   private class TouchListener extends ItemTouchListener {
     TouchListener(RecyclerView recyclerView) {
       super(recyclerView);
     }
 
-    @Override boolean performItemClick(RecyclerView parent, View view, int position, long id) {
+    @Override
+    public boolean performItemClick(RecyclerView parent, View view, int position, long id) {
       final Adapter adapter = mRecyclerView.getAdapter();
       boolean checkedStateChanged = false;
 
@@ -484,10 +377,7 @@ public class ItemSelectionSupport {
           mCheckedCount--;
         }
 
-        if (null != onItemSelectListener) {
-          onItemSelectListener.onItemSelect(mRecyclerView, mRecyclerView.getChildAt(position),
-              position, checked);
-        }
+        notifySelected(position, checked);
 
         checkedStateChanged = true;
       } else if (mChoiceMode == ChoiceMode.SINGLE) {
@@ -507,10 +397,7 @@ public class ItemSelectionSupport {
           mCheckedCount = 0;
         }
 
-        if (null != onItemSelectListener) {
-          onItemSelectListener.onItemSelect(mRecyclerView, mRecyclerView.getChildAt(position),
-              position, checked);
-        }
+        notifySelected(position, checked);
 
         checkedStateChanged = true;
       }
@@ -522,25 +409,19 @@ public class ItemSelectionSupport {
       return false;
     }
 
-    @Override boolean performItemLongClick(RecyclerView parent, View view, int position, long id) {
+    @Override
+    public boolean performItemLongClick(RecyclerView parent, View view, int position, long id) {
       return true;
     }
   }
 
-  public interface OnItemSelectListener {
-    void onItemSelect(RecyclerView parent, View view, int position, boolean checked);
-  }
-
-  public interface OnItemSelectChangeListener {
-    void onItenSelectChange(CheckedStates mCheckedStates);
-  }
-
-  public void setOnItemSelectListener(OnItemSelectListener _onItemSelectListener) {
-    this.onItemSelectListener = _onItemSelectListener;
+  public void setOnItemSelectListener(
+      ItemSelectionSupportManager.OnItemSelectListener _onItemSelectListener) {
+    ItemSelectionSupportManager.addOnItemSelectListener(_onItemSelectListener);
   }
 
   public void setonItemSelectChangeListener(
-      OnItemSelectChangeListener _onItemSelectChangeListener) {
-    this.onItemSelectChangeListener = _onItemSelectChangeListener;
+      ItemSelectionSupportManager.OnItemSelectChangeListener _onItemSelectChangeListener) {
+    ItemSelectionSupportManager.addOnItemSelectChangeListener(_onItemSelectChangeListener);
   }
 }

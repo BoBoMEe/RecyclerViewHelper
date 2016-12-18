@@ -1,4 +1,4 @@
-package com.bobomee.android.recyclerviewhelper.selectmode;
+package com.bobomee.android.recyclerviewhelper.selectclick;
 
 import android.os.Build;
 import android.support.v4.view.GestureDetectorCompat;
@@ -44,9 +44,9 @@ public abstract class ItemTouchListener extends RecyclerView.SimpleOnItemTouchLi
     return false;
   }
 
-  abstract boolean performItemClick(RecyclerView parent, View view, int position, long id);
+  public abstract boolean performItemClick(RecyclerView parent, View view, int position, long id);
 
-  abstract boolean performItemLongClick(RecyclerView parent, View view, int position, long id);
+  public abstract boolean performItemLongClick(RecyclerView parent, View view, int position, long id);
 
   private class ItemGestureListener extends GestureDetector.SimpleOnGestureListener {
 

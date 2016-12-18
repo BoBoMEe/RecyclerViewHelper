@@ -37,8 +37,10 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
   }
 
   public void delete(int pos) {
-    mData.remove(pos);
-    notifyItemRemoved(pos);
+    if (pos >= 0&& pos< mData.size()){
+      mData.remove(pos);
+      notifyItemRemoved(pos);
+    }
   }
 
   public void addAll(List<T> items) {
