@@ -31,7 +31,7 @@ Setup
 
 Gradle:
 ```groovy
-compile 'com.bobomee.android:recyclerviewhelper:1.0.2'
+compile 'com.bobomee.android:recyclerviewhelper:1.0.3'
 ```
 
 Usage
@@ -48,5 +48,5 @@ Thanks
 
 - [MarkoMilos/Paginate](https://github.com/MarkoMilos/Paginate)
 - [lucasr/twoway-view](https://github.com/lucasr/twoway-view/)
--[TellH/RecyclerTreeView](https://github.com/TellH/RecyclerTreeView)
+- [TellH/RecyclerTreeView](https://github.com/TellH/RecyclerTreeView)
 
