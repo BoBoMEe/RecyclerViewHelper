@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.bobomee.android.recyclerviewhelperdemo.pager;
+package com.bobomee.android.recyclerviewhelperdemo.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -33,15 +33,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.bobomee.android.common.widget.BackHandledFragment;
 import com.bobomee.android.recyclerviewhelper.paginate.WrapperAdapter;
+import com.bobomee.android.recyclerviewhelper.selectclick.click.ItemClick;
 import com.bobomee.android.recyclerviewhelper.selectclick.click.ItemClickSupport;
-import com.bobomee.android.recyclerviewhelper.selectclick.click.ItemClickSupportManager;
+import com.bobomee.android.recyclerviewhelper.selectclick.click.ItemLongClick;
+import com.bobomee.android.recyclerviewhelper.selectclick.select.ItemSelect;
+import com.bobomee.android.recyclerviewhelper.selectclick.select.ItemSelectChange;
 import com.bobomee.android.recyclerviewhelper.selectclick.select.ItemSelectionSupport;
-import com.bobomee.android.recyclerviewhelper.selectclick.select.ItemSelectionSupportManager;
 import com.bobomee.android.recyclerviewhelper.selectclick.select.StateManager;
-import com.bobomee.android.recyclerviewhelperdemo.BaseRecyclerAdapter;
-import com.bobomee.android.recyclerviewhelperdemo.DataProvider;
+import com.bobomee.android.recyclerviewhelperdemo.recycler.BaseRecyclerAdapter;
+import com.bobomee.android.recyclerviewhelperdemo.recycler.DataProvider;
 import com.bobomee.android.recyclerviewhelperdemo.R;
-import com.bobomee.android.recyclerviewhelperdemo.RecyclerViewHolder;
+import com.bobomee.android.recyclerviewhelperdemo.recycler.RecyclerViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,7 +133,7 @@ public class ItemSelectFragment extends BackHandledFragment {
 
     mItemClickSupport = ItemClickSupport.from(recyclerView).add();
 
-    mItemClickSupport.setOnItemClickListener(new ItemClickSupportManager.OnItemClickListener() {
+    mItemClickSupport.addOnItemClickListener(new ItemClick.OnItemClickListener() {
       @Override public void onItemClick(RecyclerView parent, View child, int position, long id) {
         mToast.setText("Item clicked: " + position);
         mToast.show();
@@ -139,8 +141,7 @@ public class ItemSelectFragment extends BackHandledFragment {
       }
     });
 
-    mItemClickSupport.setOnItemLongClickListener(
-        new ItemClickSupportManager.OnItemLongClickListener() {
+    mItemClickSupport.addOnItemLongClickListener(new ItemLongClick.OnItemLongClickListener() {
       @Override
       public boolean onItemLongClick(RecyclerView parent, View child, int position, long id) {
         mSelect = position;
@@ -157,8 +158,7 @@ public class ItemSelectFragment extends BackHandledFragment {
     mItemSelectionSupport = ItemSelectionSupport.from(recyclerView)
         .setChoiceMode(ItemSelectionSupport.ChoiceMode.MULTIPLE);
 
-    mItemSelectionSupport.setOnItemSelectListener(
-        new ItemSelectionSupportManager.OnItemSelectListener() {
+    mItemSelectionSupport.addOnItemSelectListener(new ItemSelect.OnItemSelectListener() {
       @Override
       public void onItemSelect(RecyclerView parent, View view, int position, boolean checked) {
         mToast.setText("Item --> " + position + ", selected --> " + checked);
@@ -166,8 +166,8 @@ public class ItemSelectFragment extends BackHandledFragment {
       }
     });
 
-    mItemSelectionSupport.setonItemSelectChangeListener(
-        new ItemSelectionSupportManager.OnItemSelectChangeListener() {
+    mItemSelectionSupport.addonItemSelectChangeListener(
+        new ItemSelectChange.OnItemSelectChangeListener() {
           @Override public void onItenSelectChange(StateManager.CheckedStates mCheckedStates) {
 
             if (mItemSelectionSupport.getCheckedItemCount() == 0) {

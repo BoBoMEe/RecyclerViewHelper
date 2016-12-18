@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.bobomee.android.recyclerviewhelperdemo.pager;
+package com.bobomee.android.recyclerviewhelperdemo.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import com.bobomee.android.recyclerviewhelper.paginate.Paginate;
-import com.bobomee.android.recyclerviewhelperdemo.DataProvider;
+import com.bobomee.android.recyclerviewhelperdemo.recycler.DataProvider;
 
 /**
  * Created on 2016/12/9.下午1:31.

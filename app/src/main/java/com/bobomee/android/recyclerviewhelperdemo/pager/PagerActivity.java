@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-package com.bobomee.android.recyclerviewhelperdemo;
+package com.bobomee.android.recyclerviewhelperdemo.pager;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import com.bobomee.android.common.widget.BackHandlerHelper;
-import com.bobomee.android.recyclerviewhelperdemo.pager.PageAdapter;
+import com.bobomee.android.recyclerviewhelperdemo.R;
 
 /**
  * Created on 2016/12/16.下午2:33.

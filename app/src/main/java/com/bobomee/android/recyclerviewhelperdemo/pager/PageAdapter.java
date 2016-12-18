@@ -19,6 +19,8 @@ package com.bobomee.android.recyclerviewhelperdemo.pager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import com.bobomee.android.recyclerviewhelperdemo.fragment.ExpandRecyclerFragment;
+import com.bobomee.android.recyclerviewhelperdemo.fragment.PaginateFragment;
 
 /**
  * Created on 2016/12/16.下午2:52.
@@ -33,12 +35,16 @@ public class PageAdapter extends FragmentPagerAdapter {
   }
 
   @Override public Fragment getItem(int i) {
-    PaginateFragment f = new PaginateFragment();
-    return f;
+    Fragment fragment = null;
+    if (i == 0) {
+      fragment = new PaginateFragment();
+    } else if (i == 1) {
+      fragment = new ExpandRecyclerFragment();
+    } return fragment;
   }
 
   @Override public int getCount() {
-    return 10;
+    return 2;
   }
 
   @Override public CharSequence getPageTitle(int position) {

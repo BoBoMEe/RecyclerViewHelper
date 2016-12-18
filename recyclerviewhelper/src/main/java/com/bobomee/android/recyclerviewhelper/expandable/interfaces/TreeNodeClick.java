@@ -14,26 +14,27 @@
  *  limitations under the License.
  */
 
-package com.bobomee.android.recyclerviewhelperdemo;
+package com.bobomee.android.recyclerviewhelper.expandable.interfaces;
 
-import java.util.ArrayList;
+import android.support.v7.widget.RecyclerView;
+import com.bobomee.android.recyclerviewhelper.expandable.TreeNode;
+import com.bobomee.android.recyclerviewhelper.listener.ListenerImpl;
 import java.util.List;
 
 /**
- * Created on 2016/12/9.下午1:41.
+ * Created on 2016/12/18.下午7:50.
  *
  * @author bobomee.
- *         https://github.com/BoBoMEe
  */
 
-public class DataProvider {
+public class TreeNodeClick extends ListenerImpl<OnTreeNodeClickListener> {
 
-  public static List<String> provide(int from) {
-    List<String> result = new ArrayList<>();
-    for (int i = from; i < from+20; i++) {
-      result.add(i + " ---> position");
+  public void onNodeClick(TreeNode node, RecyclerView.ViewHolder holder) {
+    List<OnTreeNodeClickListener> from = from();
+    if (hasListener()) {
+      for (OnTreeNodeClickListener onTreeNodeClickListener : from) {
+        onTreeNodeClickListener.onClick(node, holder);
+      }
     }
-
-    return result;
   }
 }

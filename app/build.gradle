@@ -7,8 +7,8 @@ android {
     applicationId "com.bobomee.android.recyclerviewhelperdemo"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 1
-    versionName "1.0"
+    versionCode 3
+    versionName "1.0.3"
   }
 }
 
@@ -19,4 +19,7 @@ dependencies {
   compile deps.common
 
   compile project(':recyclerviewhelper')
+
+  compile 'com.jakewharton:butterknife:8.4.0'
+  annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 }

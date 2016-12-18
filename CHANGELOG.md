@@ -5,4 +5,8 @@
 
 # 1.0.1(Dec 16,2016)
 
-- add RecycledViewPool
+- add RecycledViewPool use
+
+# 1.0.2(Dec 18,2016)
+
+- add Expandable for RecyclerView

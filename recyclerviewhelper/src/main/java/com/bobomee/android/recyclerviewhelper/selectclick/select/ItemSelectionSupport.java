@@ -25,14 +25,13 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Checkable;
 import com.bobomee.android.recyclerviewhelper.selectclick.ItemTouchListener;
-import java.util.List;
 
 import static android.os.Build.VERSION_CODES.HONEYCOMB;
 
 public class ItemSelectionSupport {
   private static final int INVALID_POSITION = -1;
-  //private ItemSelectionSupportManager.OnItemSelectListener onItemSelectListener;
-  //private ItemSelectionSupportManager.OnItemSelectChangeListener onItemSelectChangeListener;
+  private final ItemSelectChange mItemSelectChange;
+  private final ItemSelect mItemSelect;
 
   public enum ChoiceMode {
     NONE,
@@ -59,12 +58,15 @@ public class ItemSelectionSupport {
     mRecyclerView = recyclerView;
 
     mTouchListener = new TouchListener(recyclerView);
+
+    mItemSelectChange = new ItemSelectChange();
+    mItemSelect = new ItemSelect();
+
   }
 
   public static ItemSelectionSupport from(RecyclerView _recyclerView) {
     if (null == _recyclerView) return null;
-    ItemSelectionSupport itemSelectionSupport = new ItemSelectionSupport(_recyclerView);
-    return itemSelectionSupport;
+    return new ItemSelectionSupport(_recyclerView);
   }
 
   public ItemSelectionSupport remove() {
@@ -78,7 +80,7 @@ public class ItemSelectionSupport {
   }
 
   private void updateOnScreenCheckedViews() {
-    ItemSelectionSupportManager.notifyChage(mCheckedStates);
+    if (mItemSelectChange.hasListener()) mItemSelectChange.selectChange(mCheckedStates);
     final int count = mRecyclerView.getChildCount();
     for (int i = 0; i < count; i++) {
       final View child = mRecyclerView.getChildAt(i);
@@ -250,14 +252,9 @@ public class ItemSelectionSupport {
   }
 
   private void notifySelected(int position, boolean checked) {
-    List<ItemSelectionSupportManager.OnItemSelectListener> onItemSelectListeners =
-        ItemSelectionSupportManager.fromSelectListener();
 
-    if (null != onItemSelectListeners && !onItemSelectListeners.isEmpty()) {
-      for (ItemSelectionSupportManager.OnItemSelectListener onItemSelectListener : onItemSelectListeners) {
-        onItemSelectListener.onItemSelect(mRecyclerView, mRecyclerView.getChildAt(position),
-            position, checked);
-      }
+    if (mItemSelectChange.hasListener()) {
+      mItemSelect.select(mRecyclerView, mRecyclerView.getChildAt(position), position, checked);
     }
   }
 
@@ -415,13 +412,12 @@ public class ItemSelectionSupport {
     }
   }
 
-  public void setOnItemSelectListener(
-      ItemSelectionSupportManager.OnItemSelectListener _onItemSelectListener) {
-    ItemSelectionSupportManager.addOnItemSelectListener(_onItemSelectListener);
+  public void addOnItemSelectListener(ItemSelect.OnItemSelectListener _onItemSelectListener) {
+    mItemSelect.addListener(_onItemSelectListener);
   }
 
-  public void setonItemSelectChangeListener(
-      ItemSelectionSupportManager.OnItemSelectChangeListener _onItemSelectChangeListener) {
-    ItemSelectionSupportManager.addOnItemSelectChangeListener(_onItemSelectChangeListener);
+  public void addonItemSelectChangeListener(
+      ItemSelectChange.OnItemSelectChangeListener _onItemSelectChangeListener) {
+    mItemSelectChange.addListener(_onItemSelectChangeListener);
   }
 }

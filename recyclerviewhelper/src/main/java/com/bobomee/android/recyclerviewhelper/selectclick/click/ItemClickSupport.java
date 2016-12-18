@@ -19,17 +19,17 @@ package com.bobomee.android.recyclerviewhelper.selectclick.click;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.bobomee.android.recyclerviewhelper.selectclick.ItemTouchListener;
-import java.util.List;
 
 public class ItemClickSupport {
 
   private final RecyclerView mRecyclerView;
   private final TouchListener mTouchListener;
+  private final ItemClick mItemClick;
+  private final ItemLongClick mItemLongClick;
 
   public static ItemClickSupport from(RecyclerView _recyclerView) {
     if (null == _recyclerView) return null;
-    ItemClickSupport itemClickSupport = new ItemClickSupport(_recyclerView);
-    return itemClickSupport;
+    return new ItemClickSupport(_recyclerView);
   }
 
   public ItemClickSupport remove() {
@@ -46,6 +46,10 @@ public class ItemClickSupport {
     mRecyclerView = recyclerView;
 
     mTouchListener = new TouchListener(recyclerView);
+
+    mItemClick = new ItemClick();
+    mItemLongClick = new ItemLongClick();
+
   }
 
   /**
@@ -54,8 +58,8 @@ public class ItemClickSupport {
    *
    * @param listener The callback that will be invoked.
    */
-  public void setOnItemClickListener(ItemClickSupportManager.OnItemClickListener listener) {
-    ItemClickSupportManager.addOnItemClickListener(listener);
+  public void addOnItemClickListener(ItemClick.OnItemClickListener listener) {
+    mItemClick.addListener(listener);
   }
 
   /**
@@ -64,11 +68,11 @@ public class ItemClickSupport {
    *
    * @param listener The callback that will be invoked.
    */
-  public void setOnItemLongClickListener(ItemClickSupportManager.OnItemLongClickListener listener) {
+  public void addOnItemLongClickListener(ItemLongClick.OnItemLongClickListener listener) {
     if (!mRecyclerView.isLongClickable()) {
       mRecyclerView.setLongClickable(true);
     }
-    ItemClickSupportManager.addOnItemLongClickListener(listener);
+    mItemLongClick.addListener(listener);
   }
 
   private class TouchListener extends ItemTouchListener {
@@ -79,30 +83,22 @@ public class ItemClickSupport {
     @Override
     public boolean performItemClick(RecyclerView parent, View view, int position, long id) {
 
-      List<ItemClickSupportManager.OnItemClickListener> onItemClickListeners =
-          ItemClickSupportManager.fromClickListener();
-
-      if (null != onItemClickListeners && !onItemClickListeners.isEmpty()) {
-        for (ItemClickSupportManager.OnItemClickListener listener : onItemClickListeners) {
-          listener.onItemClick(parent, view, position, id);
-        }
+      if (mItemClick.hasListener()) {
+        mItemClick.click(parent, view, position, id);
         return true;
       }
+
       return false;
     }
 
     @Override
     public boolean performItemLongClick(RecyclerView parent, View view, int position, long id) {
 
-      List<ItemClickSupportManager.OnItemLongClickListener> onItemLongClickListeners =
-          ItemClickSupportManager.fromLongClickListener();
-
-      if (null != onItemLongClickListeners && !onItemLongClickListeners.isEmpty()) {
-        for (ItemClickSupportManager.OnItemLongClickListener onItemLongClickListener : onItemLongClickListeners) {
-          onItemLongClickListener.onItemLongClick(parent, view, position, id);
-        }
+      if (mItemLongClick.hasListener()) {
+        mItemLongClick.longClick(parent, view, position, id);
         return true;
       }
+
       return false;
     }
   }
