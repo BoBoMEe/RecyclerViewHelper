@@ -88,6 +88,12 @@ Sample
 
 ```java
 //expandable
+mRoot = new ArrayList<>();
+TreeNode<Genre> genre = new TreeNode<Genre>(new Genre("Jazz", R.drawable.ic_saxaphone);
+genre.addChilds(TreeNode ...);
+//...
+mRoot.add(genre);
+
 TreeViewAdapter treeViewAdapter =
     new TreeViewAdapter(mRoot, Arrays.asList(new ArtistViewBind(), new GenreViewBinder()));
 

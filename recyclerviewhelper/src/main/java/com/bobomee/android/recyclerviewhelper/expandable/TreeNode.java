@@ -81,6 +81,15 @@ public class TreeNode<T extends LayoutItemType> {
     return this;
   }
 
+  public TreeNode addChilds(TreeNode... _treeNodes) {
+
+    for (TreeNode treeNode : _treeNodes) {
+      addChild(treeNode);
+    }
+
+    return this;
+  }
+
   public boolean toggle() {
     isExpand = !isExpand;
     return isExpand;
