@@ -94,6 +94,10 @@ public class ItemSelectFragment extends BackHandledFragment {
 
   private void initAdapter() {
     mBaseRecyclerAdapter = new BaseRecyclerAdapter<String>(datas, mActivity) {
+      @Override public String onCreateBubbleText(int pos) {
+        return null;
+      }
+
       @Override public void bindData(RecyclerViewHolder holder, int position, String item) {
         holder.setText(R.id.tvItemName, item);
         View view = holder.itemView;

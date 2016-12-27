@@ -20,9 +20,11 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.BubbleTextCreator;
 import java.util.List;
 
-public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerViewHolder> {
+public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerViewHolder> implements
+    BubbleTextCreator {
   protected final List<T> mData;
   protected final Context mContext;
   protected LayoutInflater mInflater;

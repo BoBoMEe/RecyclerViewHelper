@@ -17,9 +17,10 @@ dependencies {
   compile deps.appcompat
   compile deps.supportv4
   compile deps.common
-
-  compile project(':recyclerviewhelper')
-
+  compile deps.design
+  compile project(
+      ':recyclerviewhelper')
   compile 'com.jakewharton:butterknife:8.4.0'
   annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
 }

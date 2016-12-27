@@ -20,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import com.bobomee.android.recyclerviewhelperdemo.fragment.ExpandRecyclerFragment;
+import com.bobomee.android.recyclerviewhelperdemo.fragment.FastScrollFragment;
 import com.bobomee.android.recyclerviewhelperdemo.fragment.PaginateFragment;
 
 /**
@@ -40,11 +41,14 @@ public class PageAdapter extends FragmentPagerAdapter {
       fragment = new PaginateFragment();
     } else if (i == 1) {
       fragment = new ExpandRecyclerFragment();
-    } return fragment;
+    } else if (i == 2) {
+      fragment = new FastScrollFragment();
+    }
+    return fragment;
   }
 
   @Override public int getCount() {
-    return 2;
+    return 3;
   }
 
   @Override public CharSequence getPageTitle(int position) {

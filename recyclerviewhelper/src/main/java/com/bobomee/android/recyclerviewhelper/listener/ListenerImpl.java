@@ -33,9 +33,10 @@ public class ListenerImpl<ListenerType> implements IListener<ListenerType> {
 
   @Override public void addListener(ListenerType _listenerType) {
 
-    if (null == mListenerTypes) {
+    if (null == mListenerTypes ) {
       mListenerTypes = new ArrayList<>();
     }
+    if (!mListenerTypes.contains(_listenerType))
     mListenerTypes.add(_listenerType);
   }
 
