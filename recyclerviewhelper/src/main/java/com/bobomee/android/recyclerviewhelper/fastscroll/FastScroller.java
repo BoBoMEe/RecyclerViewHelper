@@ -20,8 +20,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -33,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bobomee.android.recyclerviewhelper.R;
 import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.BubbleTextCreator;
-import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.ScrollerControl;
+import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.OnScrollStateChange;
 import com.bobomee.android.recyclerviewhelper.fastscroll.util.AnimatorUtil;
 import com.bobomee.android.recyclerviewhelper.fastscroll.util.GradientDrawableHelper;
 import com.bobomee.android.recyclerviewhelper.fastscroll.util.StateListDrawableHelper;
@@ -57,7 +55,7 @@ public class FastScroller extends FrameLayout {
   private boolean isInitialized = false;
   private ObjectAnimator currentAnimator;
   private BubbleTextCreator bubbleTextCreator;
-  private ScrollerControl mScrollerControl;
+  private OnScrollStateChange mOnScrollStateChange;
 
   public FastScroller(Context context) {
     this(context, null);
@@ -76,42 +74,37 @@ public class FastScroller extends FrameLayout {
     if (isInitialized) return;
     isInitialized = true;
     setClipChildren(false);
+    mOnScrollStateChange = new OnScrollStateChange();
   }
 
   public void setBubbleTextCreator(BubbleTextCreator _bubbleTextCreator) {
     bubbleTextCreator = _bubbleTextCreator;
   }
 
-  /**
-   * Layout customization.<br/>
-   * Color for Selected State is the color defined inside the Drawables.
-   *
-   * @param layoutResId Main layout of Fast Scroller
-   * @param bubbleResId Drawable resource for Bubble containing the Text
-   * @param handleResId Drawable resource for the Handle
-   */
-  public void setViewsToUse(@LayoutRes int layoutResId, @IdRes int bubbleResId,
-      @IdRes int handleResId) {
-    if (bubble != null) return;//Already inflated
-    LayoutInflater inflater = LayoutInflater.from(getContext());
-    inflater.inflate(layoutResId, this, true);
-    bubble = (TextView) findViewById(bubbleResId);
-    if (bubble != null) bubble.setVisibility(INVISIBLE);
-    handle = (ImageView) findViewById(handleResId);
+  public void addOnScrollStateChangeListener(OnScrollStateChange.OnScrollStateChangeListener _onScrollStateChangeListener){
+    mOnScrollStateChange.addListener(_onScrollStateChangeListener);
   }
+
+  @Override protected void onFinishInflate() {
+    super.onFinishInflate();
+    if (!isInEditMode()){
+      if (bubble != null) return;//Already inflated
+      LayoutInflater inflater = LayoutInflater.from(getContext());
+      inflater.inflate(R.layout.library_fast_scroller_layout, this, true);
+      bubble = (TextView) findViewById(R.id.fast_scroller_bubble);
+      if (bubble != null) bubble.setVisibility(INVISIBLE);
+      handle = (ImageView) findViewById(R.id.fast_scroller_handle);
+    }
+  }
+
 
   /**
    * Layout customization<br/>
    * Color for Selected State is also customized by the user.
    *
-   * @param layoutResId Main layout of Fast Scroller
-   * @param bubbleResId Drawable resource for Bubble containing the Text
-   * @param handleResId Drawable resource for the Handle
    * @param accentColor Color for Selected state during touch and scrolling (usually accent color)
    */
-  public void setViewsToUse(@LayoutRes int layoutResId, @IdRes int bubbleResId,
-      @IdRes int handleResId, int accentColor) {
-    setViewsToUse(layoutResId, bubbleResId, handleResId);
+  public void setAccentColor(int accentColor) {
     setBubbleAndHandleColor(accentColor);
   }
 
@@ -145,7 +138,7 @@ public class FastScroller extends FrameLayout {
         if (event.getX() < handle.getX() - ViewCompat.getPaddingStart(handle)) return false;
         if (currentAnimator != null) currentAnimator.cancel();
         handle.setSelected(true);
-        mScrollerControl.notifyScrollStateChange(true);
+        mOnScrollStateChange.onFastScrollerStateChange(true);
         showBubble();
       case MotionEvent.ACTION_MOVE:
         float y = event.getY();
@@ -155,7 +148,7 @@ public class FastScroller extends FrameLayout {
       case MotionEvent.ACTION_UP:
       case MotionEvent.ACTION_CANCEL:
         handle.setSelected(false);
-        mScrollerControl.notifyScrollStateChange(false);
+        mOnScrollStateChange.onFastScrollerStateChange(false);
         hideBubble();
         return true;
     }
@@ -199,7 +192,4 @@ public class FastScroller extends FrameLayout {
     currentAnimator = AnimatorUtil.alpha_to(bubble);
   }
 
-  public void setScrollerControl(ScrollerControl _scrollerControl) {
-    mScrollerControl = _scrollerControl;
-  }
 }

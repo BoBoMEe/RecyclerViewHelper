@@ -28,8 +28,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.bobomee.android.recyclerviewhelper.fastscroll.RecyclerFastScroller;
+import com.bobomee.android.recyclerviewhelper.fastscroll.Utils;
 import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.OnScrollStateChange;
-import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.ScrollerControl;
 import com.bobomee.android.recyclerviewhelperdemo.R;
 import com.bobomee.android.recyclerviewhelperdemo.recycler.BaseRecyclerAdapter;
 import com.bobomee.android.recyclerviewhelperdemo.recycler.RecyclerViewHolder;
@@ -47,7 +47,6 @@ public class FastScrollFragment extends Fragment
 
   private RecyclerView mRecyclerView;
   private FloatingActionButton mFloatingActionButton;
-  ScrollerControl mScrollerControl;
   Activity mActivity;
   private BaseRecyclerAdapter<String> mItemAdapter;
 
@@ -68,8 +67,13 @@ public class FastScrollFragment extends Fragment
 
     RecyclerFastScroller fastScroller = (RecyclerFastScroller) view.findViewById(R.id.fast_scroller);
     fastScroller.setBubbleTextCreator(mItemAdapter);
-    mScrollerControl = new ScrollerControl(mRecyclerView, fastScroller);
-    mScrollerControl.setFastScroller(MyUtils.getColorAccent(mActivity), this);
+
+    fastScroller.setRecyclerView(mRecyclerView);
+    fastScroller.addOnScrollStateChangeListener(this);
+
+    int color = Utils.fetchAccentColor(mActivity,MyUtils.getColorAccent(mActivity));
+    fastScroller.setAccentColor(color);
+
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
