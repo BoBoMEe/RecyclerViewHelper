@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.bobomee.android.recyclerviewhelper.R;
 import com.bobomee.android.recyclerviewhelper.fastscroll.FastScroller;
+import com.bobomee.android.recyclerviewhelper.fastscroll.RecyclerFastScroller;
 import com.bobomee.android.recyclerviewhelper.fastscroll.Utils;
 
 /**
@@ -31,12 +32,12 @@ import com.bobomee.android.recyclerviewhelper.fastscroll.Utils;
 
 public class ScrollerControl {
 
-  private final FastScroller mFastScroller;
+  private final RecyclerFastScroller mFastScroller;
   private final RecyclerView mRecyclerView;
 
   private OnScrollStateChange mOnScrollStateChange;
 
-  public ScrollerControl(@NonNull RecyclerView mRecyclerView, @NonNull FastScroller mFastScroller) {
+  public ScrollerControl(@NonNull RecyclerView mRecyclerView, @NonNull RecyclerFastScroller mFastScroller) {
     this.mFastScroller = mFastScroller;
     this.mRecyclerView = mRecyclerView;
     mOnScrollStateChange = new OnScrollStateChange();

@@ -27,7 +27,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.bobomee.android.recyclerviewhelper.fastscroll.FastScroller;
+import com.bobomee.android.recyclerviewhelper.fastscroll.RecyclerFastScroller;
 import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.OnScrollStateChange;
 import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.ScrollerControl;
 import com.bobomee.android.recyclerviewhelperdemo.R;
@@ -66,7 +66,7 @@ public class FastScrollFragment extends Fragment
     mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
     mRecyclerView.setAdapter(mItemAdapter);
 
-    FastScroller fastScroller = (FastScroller) view.findViewById(R.id.fast_scroller);
+    RecyclerFastScroller fastScroller = (RecyclerFastScroller) view.findViewById(R.id.fast_scroller);
     fastScroller.setBubbleTextCreator(mItemAdapter);
     mScrollerControl = new ScrollerControl(mRecyclerView, fastScroller);
     mScrollerControl.setFastScroller(MyUtils.getColorAccent(mActivity), this);
