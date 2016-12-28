@@ -53,7 +53,7 @@
       android:layout_gravity="end|bottom"
       android:layout_margin="16dp"
       android:clickable="true"
-      android:src="@drawable/fab_add"
+      android:src="@android:drawable/arrow_up_float"
       app:borderWidth="0dp"
       />
 </android.support.design.widget.CoordinatorLayout>

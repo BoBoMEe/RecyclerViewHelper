@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.bobomee.android.recyclerviewhelper.fastscroll.RecyclerFastScroller;
 import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.OnScrollStateChange;
+import com.bobomee.android.recyclerviewhelper.smoothlayout.SmoothScrollStaggeredLayoutManager;
 import com.bobomee.android.recyclerviewhelperdemo.R;
 import com.bobomee.android.recyclerviewhelperdemo.recycler.BaseRecyclerAdapter;
 import com.bobomee.android.recyclerviewhelperdemo.recycler.RecyclerViewHolder;
@@ -66,7 +67,7 @@ public class FastScrollFragment extends Fragment
     mFloatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
 
     mRecyclerView.setLayoutManager(
-        new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        new SmoothScrollStaggeredLayoutManager(mActivity,2, StaggeredGridLayoutManager.VERTICAL));
     mRecyclerView.setAdapter(mItemAdapter);
 
     RecyclerFastScroller fastScroller = (RecyclerFastScroller) view.findViewById(R.id.fast_scroller);
@@ -77,6 +78,12 @@ public class FastScrollFragment extends Fragment
 
     int color = getColorAccent(mActivity);
     fastScroller.setAccentColor(color);
+
+    mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        mRecyclerView.smoothScrollToPosition(0);
+      }
+    });
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP) public static int getColorAccent(Context context) {

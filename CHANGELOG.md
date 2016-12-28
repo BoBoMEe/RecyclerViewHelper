@@ -2,7 +2,6 @@
 
 - add Paginate / Select(Click) Mode
 
-
 # 1.0.1(Dec 16,2016)
 
 - add RecycledViewPool use
@@ -14,3 +13,7 @@
 # 1.0.4(Dec 19,2016)
 
 - add TreeNodes (List ,[])
+
+# 1.0.5(Dec 28,2016)
+
+- add fastscroller and smoothscrollToPosition

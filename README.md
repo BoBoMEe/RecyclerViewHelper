@@ -6,6 +6,7 @@ Android library for easy to use `RecyclerView`
 - Paginate
 - Click/Select Mode
 - Expandable
+- SmoothScroll
 
 Features
 --------
@@ -16,14 +17,14 @@ Features
 
 - [TellH/RecyclerTreeView](https://github.com/TellH/RecyclerTreeView) : Add or Remove items in RecyclerView.Adapter
 
+- [davideas/FlexibleAdapter](https://github.com/davideas/FlexibleAdapter) : Fix speed for smoothScrollToPosition
+
 Screenshot
 --------
-<img src="art/demo.gif">
 
-<br/>
-
-<img src="art/expand.gif">
-
+![paginate](art/demo.gif)
+![paginate](art/expand.gif)
+![paginate](art/smooth.gif)
 
 
 Setup
@@ -31,7 +32,7 @@ Setup
 
 Gradle:
 ```groovy
-compile 'com.bobomee.android:recyclerviewhelper:1.0.3'
+compile 'com.bobomee.android:recyclerviewhelper:1.0.5'
 ```
 
 Usage
@@ -64,6 +65,9 @@ Sample
     }
   });
 
+```
+
+```java
 //select
  mItemSelectionSupport = ItemSelectionSupport.from(recyclerView)
     .setChoiceMode(ItemSelectionSupport.ChoiceMode.MULTIPLE);
@@ -82,7 +86,7 @@ Sample
           }
         });
 
-// clear choices
+//clear choices
    mItemSelectionSupport.clearChoices();
 ```
 
@@ -118,8 +122,41 @@ TreeViewAdapter treeViewAdapter =
         //ToastUtil.show(getActivity(), "addOnTreeNodeClick");
       }
     });
+
 ```
 
+```java
+// fastscroller
+    mRecyclerView.setAdapter(mItemAdapter);
+
+    RecyclerFastScroller fastScroller = (RecyclerFastScroller) view.findViewById(R.id.fast_scroller);
+    fastScroller.setBubbleTextCreator(mItemAdapter);
+
+    fastScroller.setRecyclerView(mRecyclerView);
+    fastScroller.addOnScrollStateChangeListener(this);
+
+    int color = getColorAccent(mActivity);
+    fastScroller.setAccentColor(color);
+```
+
+```java
+// set scroll speed
+//#TopSnappedSmoothScroller#calculateSpeedPerPixel
+@Override
+protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
+		return MILLISECONDS_PER_INCH / displayMetrics.densityDpi;
+}
+
+// smoothscroll
+mRecyclerView.setLayoutManager(
+        new SmoothScrollStaggeredLayoutManager(mActivity,2, StaggeredGridLayoutManager.VERTICAL));
+
+mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        mRecyclerView.smoothScrollToPosition(0);
+      }
+    });
+```
 
 Thanks
 --------
@@ -127,3 +164,4 @@ Thanks
 - [MarkoMilos/Paginate](https://github.com/MarkoMilos/Paginate)
 - [lucasr/twoway-view](https://github.com/lucasr/twoway-view/)
 - [TellH/RecyclerTreeView](https://github.com/TellH/RecyclerTreeView)
+- [davideas/FlexibleAdapter](https://github.com/davideas/FlexibleAdapter)
