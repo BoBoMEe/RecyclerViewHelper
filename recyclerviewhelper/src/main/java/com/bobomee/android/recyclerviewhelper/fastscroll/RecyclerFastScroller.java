@@ -91,7 +91,7 @@ public class RecyclerFastScroller extends FastScroller {
     if (recyclerView != null) recyclerView.removeOnScrollListener(onScrollListener);
   }
 
-  public void setRecyclerViewPosition(float y) {
+  public void onScrollPosition(float y) {
     if (recyclerView != null) {
       int itemCount = recyclerView.getAdapter().getItemCount();
       //Calculate proportion
@@ -110,7 +110,7 @@ public class RecyclerFastScroller extends FastScroller {
       } else {
         ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(targetPos, 0);
       }
-      setBubblePos(targetPos);
+      setBubbleText(targetPos);
     }
   }
 }

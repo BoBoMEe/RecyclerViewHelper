@@ -143,7 +143,7 @@ public class FastScroller extends FrameLayout {
       case MotionEvent.ACTION_MOVE:
         float y = event.getY();
         setBubbleAndHandlePosition(y);
-        setRecyclerViewPosition(y);
+        onScrollPosition(y);
         return true;
       case MotionEvent.ACTION_UP:
       case MotionEvent.ACTION_CANCEL:
@@ -155,12 +155,11 @@ public class FastScroller extends FrameLayout {
     return super.onTouchEvent(event);
   }
 
-  public void setRecyclerViewPosition(float _y) {
+  public void onScrollPosition(float _y) {
 
   }
 
-  protected void setBubblePos(int _targetPos) {
-    //Update bubbleText
+  protected void setBubbleText(int _targetPos) {
     if (bubble != null) {
       String bubbleText = bubbleTextCreator.onCreateBubbleText(_targetPos);
       if (bubbleText != null) {

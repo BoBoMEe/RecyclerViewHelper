@@ -16,19 +16,22 @@
 
 package com.bobomee.android.recyclerviewhelperdemo.fragment;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.bobomee.android.recyclerviewhelper.fastscroll.RecyclerFastScroller;
-import com.bobomee.android.recyclerviewhelper.fastscroll.Utils;
 import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.OnScrollStateChange;
 import com.bobomee.android.recyclerviewhelperdemo.R;
 import com.bobomee.android.recyclerviewhelperdemo.recycler.BaseRecyclerAdapter;
@@ -62,7 +65,8 @@ public class FastScrollFragment extends Fragment
 
     mFloatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
 
-    mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+    mRecyclerView.setLayoutManager(
+        new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
     mRecyclerView.setAdapter(mItemAdapter);
 
     RecyclerFastScroller fastScroller = (RecyclerFastScroller) view.findViewById(R.id.fast_scroller);
@@ -71,9 +75,16 @@ public class FastScrollFragment extends Fragment
     fastScroller.setRecyclerView(mRecyclerView);
     fastScroller.addOnScrollStateChangeListener(this);
 
-    int color = Utils.fetchAccentColor(mActivity,MyUtils.getColorAccent(mActivity));
+    int color = getColorAccent(mActivity);
     fastScroller.setAccentColor(color);
+  }
 
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP) public static int getColorAccent(Context context) {
+    int accentAttr =  android.R.attr.colorAccent ;
+    TypedArray androidAttr = context.getTheme().obtainStyledAttributes(new int[] { accentAttr });
+    int colorAccent = androidAttr.getColor(0, 0xFF009688); //Default: material_deep_teal_500
+    androidAttr.recycle();
+    return colorAccent;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
