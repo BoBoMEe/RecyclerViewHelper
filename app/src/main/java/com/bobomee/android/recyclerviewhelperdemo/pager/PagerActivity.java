@@ -21,6 +21,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import com.bobomee.android.common.widget.BackHandlerHelper;
 import com.bobomee.android.recyclerviewhelperdemo.R;
+import com.bobomee.android.recyclerviewhelperdemo.bean.PagerBean;
 
 /**
  * Created on 2016/12/16.下午2:33.
@@ -35,7 +36,7 @@ public class PagerActivity extends AppCompatActivity {
     setContentView(R.layout.root_view);
     ViewPager pager = (ViewPager) findViewById(R.id.pager);
     if (null != pager) {
-      pager.setAdapter(new PageAdapter(getSupportFragmentManager()));
+      pager.setAdapter(new PageAdapter(getSupportFragmentManager(), PagerBean.provide()));
     }
   }
 

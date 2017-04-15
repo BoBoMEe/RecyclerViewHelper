@@ -19,9 +19,8 @@ package com.bobomee.android.recyclerviewhelperdemo.pager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import com.bobomee.android.recyclerviewhelperdemo.fragment.ExpandRecyclerFragment;
-import com.bobomee.android.recyclerviewhelperdemo.fragment.FastScrollFragment;
-import com.bobomee.android.recyclerviewhelperdemo.fragment.ItemClickFragment;
+import com.bobomee.android.recyclerviewhelperdemo.bean.PagerBean;
+import java.util.List;
 
 /**
  * Created on 2016/12/16.下午2:52.
@@ -31,34 +30,23 @@ import com.bobomee.android.recyclerviewhelperdemo.fragment.ItemClickFragment;
 
 public class PageAdapter extends FragmentPagerAdapter {
 
-  public PageAdapter(FragmentManager fm) {
+  private final List<PagerBean> pagerBeans;
+
+  public PageAdapter(FragmentManager fm, List<PagerBean> pagerBeens) {
     super(fm);
+    this.pagerBeans = pagerBeens;
   }
 
   @Override public Fragment getItem(int i) {
-    Fragment fragment;
-    switch (i) {
-      case 0:
-        fragment = new ItemClickFragment();
-        break;
-      case 1:
-        fragment = new ExpandRecyclerFragment();
-        break;
-      case 2:
-        fragment = new FastScrollFragment();
-        break;
-      default:
-        fragment = new Fragment();
-        break;
-    }
-    return fragment;
+    PagerBean pagerBean = pagerBeans.get(i);
+    return pagerBean.getFragment();
   }
 
   @Override public int getCount() {
-    return 3;
+    return pagerBeans.size();
   }
 
   @Override public CharSequence getPageTitle(int position) {
-    return "pos:" + position;
+    return pagerBeans.get(position).getTitle();
   }
 }

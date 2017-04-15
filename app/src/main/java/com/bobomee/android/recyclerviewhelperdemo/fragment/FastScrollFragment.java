@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.bobomee.android.recyclerviewhelper.fastscroll.RecyclerFastScroller;
+import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.BubbleTextCreator;
 import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.OnScrollStateChange;
 import com.bobomee.android.recyclerviewhelper.smoothlayout.SmoothScrollStaggeredLayoutManager;
 import com.bobomee.android.recyclerviewhelperdemo.R;
@@ -52,7 +53,14 @@ public class FastScrollFragment extends Fragment
   private RecyclerView mRecyclerView;
   private FloatingActionButton mFloatingActionButton;
   Activity mActivity;
-  private BaseRecyclerAdapter<String> mItemAdapter;
+  private FastScrollAdapter mItemAdapter;
+
+  public static FastScrollFragment newInstance() {
+    Bundle args = new Bundle();
+    FastScrollFragment fragment = new FastScrollFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -100,19 +108,26 @@ public class FastScrollFragment extends Fragment
 
     prepareData();
 
-    mItemAdapter = new BaseRecyclerAdapter<String>(mDatas, mActivity) {
-      @Override public void bindData(RecyclerViewHolder holder, int position, String item) {
-        holder.setText(R.id.tvItemName, item);
-      }
+    mItemAdapter = new FastScrollAdapter(mDatas, mActivity);
+  }
 
-      @Override public int getItemLayoutId(int viewType) {
-        return R.layout.item_adapter;
-      }
+  class FastScrollAdapter extends BaseRecyclerAdapter<String> implements BubbleTextCreator{
 
-      @Override public String onCreateBubbleText(int pos) {
-        return String.valueOf(pos);
-      }
-    };
+    protected FastScrollAdapter(List<String> data, Context context) {
+      super(data, context);
+    }
+
+    @Override public void bindData(RecyclerViewHolder holder, int position, String item) {
+      holder.setText(R.id.tvItemName, item);
+    }
+
+    @Override public int getItemLayoutId(int viewType) {
+      return R.layout.item_adapter;
+    }
+
+    @Override public String onCreateBubbleText(int pos) {
+      return String.valueOf(pos);
+    }
   }
 
   private List<String> mDatas = new ArrayList<>();

@@ -49,6 +49,13 @@ public class ExpandRecyclerFragment extends Fragment {
   private List<TreeNode> mRoot;
   private RecyclerView rv;
 
+  public static ExpandRecyclerFragment newInstance() {
+    Bundle args = new Bundle();
+    ExpandRecyclerFragment fragment = new ExpandRecyclerFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {

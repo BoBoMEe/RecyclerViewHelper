@@ -42,6 +42,13 @@ import java.util.List;
 
 public class ItemClickFragment extends BackHandledFragment {
 
+  public static ItemClickFragment newInstance() {
+    Bundle args = new Bundle();
+    ItemClickFragment fragment = new ItemClickFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
   private Toast mToast;
   protected List<String> datas = new ArrayList<>();
 
@@ -74,10 +81,6 @@ public class ItemClickFragment extends BackHandledFragment {
 
   private void initAdapter() {
     mBaseRecyclerAdapter = new BaseRecyclerAdapter<String>(datas, mActivity) {
-      @Override public String onCreateBubbleText(int pos) {
-        return null;
-      }
-
       @Override public void bindData(RecyclerViewHolder holder, int position, String item) {
         holder.setText(R.id.tvItemName, item);
       }
@@ -130,7 +133,6 @@ public class ItemClickFragment extends BackHandledFragment {
         return false;
       }
     });
-
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -143,11 +145,11 @@ public class ItemClickFragment extends BackHandledFragment {
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.add:{
-        mBaseRecyclerAdapter.add(0,"new item");
+      case R.id.add: {
+        mBaseRecyclerAdapter.add(0, "new item");
         recyclerView.scrollToPosition(0);
       }
-        break;
+      break;
       default:
         break;
     }
