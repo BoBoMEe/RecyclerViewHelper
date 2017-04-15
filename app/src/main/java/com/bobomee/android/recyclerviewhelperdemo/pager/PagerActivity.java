@@ -34,7 +34,9 @@ public class PagerActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.root_view);
     ViewPager pager = (ViewPager) findViewById(R.id.pager);
-    pager.setAdapter(new PageAdapter(getSupportFragmentManager()));
+    if (null != pager) {
+      pager.setAdapter(new PageAdapter(getSupportFragmentManager()));
+    }
   }
 
   @Override public void onBackPressed() {

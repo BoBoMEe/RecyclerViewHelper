@@ -1,4 +1,4 @@
-package com.bobomee.android.recyclerviewhelper.selectclick;
+package com.bobomee.android.recyclerviewhelper.itemclick;
 
 import android.os.Build;
 import android.support.v4.view.GestureDetectorCompat;

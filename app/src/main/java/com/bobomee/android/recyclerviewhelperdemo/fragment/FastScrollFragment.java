@@ -57,7 +57,7 @@ public class FastScrollFragment extends Fragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_fast_scroll, container, false);
+    return inflater.inflate(R.layout.fastscroll_fragment, container, false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class FastScrollFragment extends Fragment
     fastScroller.setBubbleTextCreator(mItemAdapter);
 
     fastScroller.setRecyclerView(mRecyclerView);
-    fastScroller.addOnScrollStateChangeListener(this);
+    //fastScroller.addOnScrollStateChangeListener(this);
 
     int color = getColorAccent(mActivity);
     fastScroller.setAccentColor(color);
@@ -126,11 +126,11 @@ public class FastScrollFragment extends Fragment
   }
 
   @Override public void onFastScrollerStateChange(boolean scrolling) {
-    if (scrolling) {
-      hideFab();
-    } else {
-      showFab();
-    }
+    //if (scrolling) {
+    //  hideFab();
+    //} else {
+    //  showFab();
+    //}
   }
 
   private void hideFab() {

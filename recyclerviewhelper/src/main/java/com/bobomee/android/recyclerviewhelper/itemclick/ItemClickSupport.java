@@ -14,11 +14,10 @@
  *  limitations under the License.
  */
 
-package com.bobomee.android.recyclerviewhelper.selectclick.click;
+package com.bobomee.android.recyclerviewhelper.itemclick;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import com.bobomee.android.recyclerviewhelper.selectclick.ItemTouchListener;
 
 public class ItemClickSupport {
 

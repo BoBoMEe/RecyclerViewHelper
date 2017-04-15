@@ -21,7 +21,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import com.bobomee.android.recyclerviewhelperdemo.fragment.ExpandRecyclerFragment;
 import com.bobomee.android.recyclerviewhelperdemo.fragment.FastScrollFragment;
-import com.bobomee.android.recyclerviewhelperdemo.fragment.PaginateFragment;
+import com.bobomee.android.recyclerviewhelperdemo.fragment.ItemClickFragment;
 
 /**
  * Created on 2016/12/16.下午2:52.
@@ -36,13 +36,20 @@ public class PageAdapter extends FragmentPagerAdapter {
   }
 
   @Override public Fragment getItem(int i) {
-    Fragment fragment = null;
-    if (i == 0) {
-      fragment = new PaginateFragment();
-    } else if (i == 1) {
-      fragment = new ExpandRecyclerFragment();
-    } else if (i == 2) {
-      fragment = new FastScrollFragment();
+    Fragment fragment;
+    switch (i) {
+      case 0:
+        fragment = new ItemClickFragment();
+        break;
+      case 1:
+        fragment = new ExpandRecyclerFragment();
+        break;
+      case 2:
+        fragment = new FastScrollFragment();
+        break;
+      default:
+        fragment = new Fragment();
+        break;
     }
     return fragment;
   }

@@ -1,102 +1,225 @@
 /*
- * Copyright (C) 2016.  BoBoMEe(wbwjx115@gmail.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * (C) Copyright 2013, 2017 Pharmacodia Technology Co.,Ltd.
  */
 
 package com.bobomee.android.recyclerviewhelper.paginate;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Project ID：400YF17050 <br/>
+ * Resume:     Adapter的包装类 ,区分 是 Loading的 item ,还是 正常 的 item<br/>
+ *
+ * @author 汪波
+ * @version 1.0
+ * @since 2017 /2/14 汪波 first commit
+ */
 public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int ITEM_VIEW_TYPE_LOADING = Integer.MAX_VALUE - 50; // Magic
+  private static final int ITEM_VIEW_TYPE_LOADING = Integer.MAX_VALUE - 50; // Magic
+  private static final int ITEM_VIEW_TYPE_NO_DATA = Integer.MAX_VALUE - 51; // Magic
 
-    private final RecyclerView.Adapter wrappedAdapter;
-    private final LoadingListItemCreator loadingListItemCreator;
-    private boolean displayLoadingRow = true;
+  private final RecyclerView.Adapter mWrappedAdapter;
+  private final LoadingListItemCreator loadingListItemCreator;
+  private final LoadingListItemCreator noDataTip;
+  private boolean mDisplayLoadingRow = true;
+  private boolean mDisplayNoDataRow;
 
-    public WrapperAdapter(RecyclerView.Adapter _wrappedAdapter) {
-        wrappedAdapter = _wrappedAdapter;
-        loadingListItemCreator = LoadingListItemCreator.DEFAULT;
+  /**
+   * 构造函数,构造一个 Wrapper adapter.
+   *
+   * @param wrappedAdapter the wrapped adapter
+   */
+  public WrapperAdapter(RecyclerView.Adapter wrappedAdapter) {
+    this.mWrappedAdapter = wrappedAdapter;
+    loadingListItemCreator = LoadingListItemCreator.DEFAULT;
+    noDataTip = null;
+  }
+
+  /**
+   * 构造函数,构造一个 Wrapper adapter.
+   *
+   * @param adapter the adapter
+   * @param creator the creator
+   */
+  public WrapperAdapter(RecyclerView.Adapter adapter, LoadingListItemCreator creator) {
+    this.mWrappedAdapter = adapter;
+    this.loadingListItemCreator = creator;
+    noDataTip = null;
+  }
+
+  /**
+   * 构造函数,构造一个 Wrapper adapter.
+   *
+   * @param adapter the adapter
+   * @param creator the creator
+   */
+  public WrapperAdapter(RecyclerView.Adapter adapter, LoadingListItemCreator creator,
+      LoadingListItemCreator noData) {
+    this.mWrappedAdapter = adapter;
+    this.loadingListItemCreator = creator;
+    noDataTip = noData;
+  }
+
+  @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    if (viewType == ITEM_VIEW_TYPE_LOADING) {
+      return loadingListItemCreator.onCreateViewHolder(parent, viewType);
+    } else if (viewType == ITEM_VIEW_TYPE_NO_DATA) {
+      assert noDataTip != null;
+      return noDataTip.onCreateViewHolder(parent, viewType);
+    } else {
+      return mWrappedAdapter.onCreateViewHolder(parent, viewType);
     }
+  }
 
-    public WrapperAdapter(RecyclerView.Adapter adapter, LoadingListItemCreator creator) {
-        this.wrappedAdapter = adapter;
-        this.loadingListItemCreator = creator;
-    }
+  @Override public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    int type = getItemViewType(position);
+    if (type == ITEM_VIEW_TYPE_LOADING) {
+      loadingListItemCreator.onBindViewHolder(holder, position);
+      // 如果设置了回调，则设置点击事件
+      holder.itemView.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          int pos = holder.getLayoutPosition();
+          if (mOnItemClickListener != null) mOnItemClickListener.onItemClick(holder.itemView, pos);
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == ITEM_VIEW_TYPE_LOADING) {
-            return loadingListItemCreator.onCreateViewHolder(parent, viewType);
-        } else {
-            return wrappedAdapter.onCreateViewHolder(parent, viewType);
         }
-    }
+      });
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (isLoadingRow(position)) {
-            loadingListItemCreator.onBindViewHolder(holder, position);
-        } else {
-            wrappedAdapter.onBindViewHolder(holder, position);
+      holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        @Override public boolean onLongClick(View v) {
+          int pos = holder.getLayoutPosition();
+          if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemLongClick(holder.itemView, pos);
+          }
+          return false;
         }
+      });
+    } else if (type == ITEM_VIEW_TYPE_NO_DATA) {
+      // do nothing
+      if (noDataTip != null) noDataTip.onBindViewHolder(holder, position);
+    } else {
+      mWrappedAdapter.onBindViewHolder(holder, position);
     }
+  }
 
-    @Override
-    public int getItemCount() {
-        return displayLoadingRow ? wrappedAdapter.getItemCount() + 1 : wrappedAdapter.getItemCount();
+  @Override public int getItemCount() {
+    if (mDisplayLoadingRow || mDisplayNoDataRow) {
+      return mWrappedAdapter.getItemCount() + 1;
+    } else {
+      return mWrappedAdapter.getItemCount();
     }
+  }
 
-    @Override
-    public int getItemViewType(int position) {
-        return isLoadingRow(position) ? ITEM_VIEW_TYPE_LOADING : wrappedAdapter.getItemViewType(position);
+  @Override public int getItemViewType(int position) {
+    if (isLoadingRow(position)) {
+      return ITEM_VIEW_TYPE_LOADING;
+    } else if (isNoDataRow(position)) {
+      return ITEM_VIEW_TYPE_NO_DATA;
+    } else {
+      return mWrappedAdapter.getItemViewType(position);
     }
+  }
 
-    @Override
-    public long getItemId(int position) {
-        return isLoadingRow(position) ? RecyclerView.NO_ID : wrappedAdapter.getItemId(position);
+  @Override public long getItemId(int position) {
+    if (isLoadingRow(position)) {
+      return RecyclerView.NO_ID;
+    } else if (isNoDataRow(position)) {
+      return RecyclerView.NO_ID;
+    } else {
+      return mWrappedAdapter.getItemId(position);
     }
+  }
 
-    @Override
-    public void setHasStableIds(boolean hasStableIds) {
-        super.setHasStableIds(hasStableIds);
-        wrappedAdapter.setHasStableIds(hasStableIds);
+  @Override public void setHasStableIds(boolean hasStableIds) {
+    super.setHasStableIds(hasStableIds);
+    mWrappedAdapter.setHasStableIds(hasStableIds);
+  }
+
+  /**
+   * 获取一个 adapter包装类实例.
+   *
+   * @return the wrapped adapter
+   */
+  public RecyclerView.Adapter getWrappedAdapter() {
+    return mWrappedAdapter;
+  }
+
+  /**
+   * 是否展示 加载中的 条目.
+   *
+   * @return the boolean
+   */
+  boolean isDisplayLoadingRow() {
+    return mDisplayLoadingRow;
+  }
+
+  void displayRow(boolean displayLoadingRow, boolean displayNoDataRow) {
+    boolean isDisplayLoadingRowChanged = displayLoadingRow(displayLoadingRow);
+    boolean isDisplayNoDataRowChanged = displayNoDataRow(displayNoDataRow);
+    if (isDisplayLoadingRowChanged || isDisplayNoDataRowChanged) {
+      notifyDataSetChanged();
     }
+  }
 
-    public RecyclerView.Adapter getWrappedAdapter() {
-        return wrappedAdapter;
+  /**
+   * 展示 加载中的 条目.
+   *
+   * @param displayLoadingRow the display loading row
+   * @return 是否修改
+   */
+  private boolean displayLoadingRow(boolean displayLoadingRow) {
+    if (this.mDisplayLoadingRow != displayLoadingRow) {
+      this.mDisplayLoadingRow = displayLoadingRow;
+      return true;
     }
+    return false;
+  }
 
-    boolean isDisplayLoadingRow() {
-        return displayLoadingRow;
+  private boolean displayNoDataRow(boolean displayNoDataRow) {
+    if (canDisplayNoDataRow()) {
+      mDisplayNoDataRow = displayNoDataRow;
+      return true;
     }
+    return false;
+  }
 
-    void displayLoadingRow(boolean displayLoadingRow) {
-        if (this.displayLoadingRow != displayLoadingRow) {
-            this.displayLoadingRow = displayLoadingRow;
-            notifyDataSetChanged();
-        }
-    }
+  private boolean canDisplayNoDataRow() {
+    return this.noDataTip != null;
+  }
 
-    boolean isLoadingRow(int position) {
-        return displayLoadingRow && position == getLoadingRowPosition();
-    }
+  /**
+   * 判断当前 pos 是否是 加载中的item.
+   *
+   * @param position the position
+   * @return the boolean
+   */
+  boolean isLoadingRow(int position) {
+    return mDisplayLoadingRow && position == getLoadingRowPosition();
+  }
 
-    private int getLoadingRowPosition() {
-        return displayLoadingRow ? getItemCount() - 1 : -1;
-    }
+  private boolean isNoDataRow(int position) {
+    return mDisplayNoDataRow && position == getNoDataRowPosition();
+  }
 
+  private int getNoDataRowPosition() {
+    return mDisplayNoDataRow ? getItemCount() - 1 : -1;
+  }
+
+  private int getLoadingRowPosition() {
+    return mDisplayLoadingRow ? getItemCount() - 1 : -1;
+  }
+
+  public interface OnItemClickListener {
+    void onItemClick(View view, int position);
+
+    void onItemLongClick(View view, int position);
+  }
+
+  private OnItemClickListener mOnItemClickListener;
+
+  public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+    this.mOnItemClickListener = mOnItemClickListener;
+  }
 }

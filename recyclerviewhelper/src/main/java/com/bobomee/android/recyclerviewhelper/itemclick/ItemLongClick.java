@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.bobomee.android.recyclerviewhelper.selectclick.click;
+package com.bobomee.android.recyclerviewhelper.itemclick;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
