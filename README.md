@@ -3,95 +3,60 @@ RecyclerViewHelper
 
 Android library for easy to use `RecyclerView`
 
-- Paginate
-- Click/Select Mode
-- Expandable
-- SmoothScroll
+- Paginate ： Paginate for RecyclerView
+- ItemClick ： Item Click for RecyclerView
+- Expandable ： Expandable for RecyclerView
+- FastSmoothScroll ： SmoothScroll speed scroll for RecyclerView
 
-Features
---------
-
-- [MarkoMilos/Paginate](https://github.com/MarkoMilos/Paginate): Wrapper RecyclerView.Adapter
-
-- [lucasr/twoway-view](https://github.com/lucasr/twoway-view/): Implement RecyclerView.OnItemTouchListener
-
-- [TellH/RecyclerTreeView](https://github.com/TellH/RecyclerTreeView) : Add or Remove items in RecyclerView.Adapter
-
-- [davideas/FlexibleAdapter](https://github.com/davideas/FlexibleAdapter) : Fix speed for smoothScrollToPosition
-
-Screenshot
---------
+# Screenshot
 
 ![paginate](art/demo.gif)
-![paginate](art/expand.gif)
-![paginate](art/smooth.gif)
 
-
-Setup
---------
+# Setup
 
 Gradle:
 ```groovy
-compile 'com.bobomee.android:recyclerviewhelper:1.0.5'
+compile 'com.bobomee.android:recyclerviewhelper:1.0.6'
 ```
 
-Usage
---------
-
-- Paginate : see [MarkoMilos/Paginate](https://github.com/MarkoMilos/Paginate) or [PaginateFragment](https://github.com/BoBoMEe/RecyclerViewHelper/blob/master/app/src/main/java/com/bobomee/android/recyclerviewhelperdemo/fragment/PaginateFragment.java)
-
-- Select/Click: see [lucasr/twoway-view](https://github.com/lucasr/twoway-view/) or [ItemSelectFragment](https://github.com/BoBoMEe/RecyclerViewHelper/blob/master/app/src/main/java/com/bobomee/android/recyclerviewhelperdemo/fragment/ItemSelectFragment.java)
-
-- Expanable : See [TellH/RecyclerTreeView](https://github.com/TellH/RecyclerTreeView) or [ExpandRecyclerFragment](https://github.com/BoBoMEe/RecyclerViewHelper/blob/master/app/src/main/java/com/bobomee/android/recyclerviewhelperdemo/fragment/ExpandRecyclerFragment.java)
+# Usage
 
 
-Sample
--------
+- Paginate ：[PaginateFragment](https://github.com/BoBoMEe/RecyclerViewHelper/blob/master/app/src/main/java/com/bobomee/android/recyclerviewhelperdemo/fragment/PaginateFragment.java)
+- ItemClick ：[ItemClickFragment](https://github.com/BoBoMEe/RecyclerViewHelper/blob/master/app/src/main/java/com/bobomee/android/recyclerviewhelperdemo/fragment/ItemClickFragment.java)
+- Expanable ：[ExpandRecyclerFragment](https://github.com/BoBoMEe/RecyclerViewHelper/blob/master/app/src/main/java/com/bobomee/android/recyclerviewhelperdemo/fragment/ExpandRecyclerFragment.java)
+- FastScroll ： [FastScrollFragment](https://github.com/BoBoMEe/RecyclerViewHelper/blob/master/app/src/main/java/com/bobomee/android/recyclerviewhelperdemo/fragment/FastScrollFragment.java)
 
-```java
-//click
-  mItemClickSupport = ItemClickSupport.from(recyclerView).add();
-  mItemClickSupport.addOnItemClickListener(new ItemClick.OnItemClickListener() {
-    @Override public void onItemClick(RecyclerView parent, View child, int position, long id) {
-      //...
-    }
-  });
 
-  mItemClickSupport.addOnItemLongClickListener(new ItemLongClick.OnItemLongClickListener() {
-    @Override
-    public boolean onItemLongClick(RecyclerView parent, View child, int position, long id) {
-    //...
-      return true;
-    }
-  });
+# Sample
 
-```
+
+## Click Mode
 
 ```java
-//select
- mItemSelectionSupport = ItemSelectionSupport.from(recyclerView)
-    .setChoiceMode(ItemSelectionSupport.ChoiceMode.MULTIPLE);
+ItemClickSupport itemClickSupport = ItemClickSupport.from(recyclerView).add();
 
-    mItemSelectionSupport.addOnItemSelectListener(new ItemSelect.OnItemSelectListener() {
-      @Override
-      public void onItemSelect(RecyclerView parent, View view, int position, boolean checked) {
-        //...
+    itemClickSupport.addOnItemClickListener(new ItemClick.OnItemClickListener() {
+      @Override public void onItemClick(RecyclerView parent, View child, int position, long id) {
+        mToast.setText("Item clicked: " + position);
+        mToast.show();
+        mBaseRecyclerAdapter.delete(position);
       }
     });
 
-    mItemSelectionSupport.addonItemSelectChangeListener(
-        new ItemSelectChange.OnItemSelectChangeListener() {
-          @Override public void onItenSelectChange(StateManager.CheckedStates mCheckedStates) {
-           //...
-          }
-        });
-
-//clear choices
-   mItemSelectionSupport.clearChoices();
+    itemClickSupport.addOnItemLongClickListener(new ItemLongClick.OnItemLongClickListener() {
+      @Override
+      public boolean onItemLongClick(RecyclerView parent, View child, int position, long id) {
+        mToast.setText("Item long pressed: " + position);
+        mToast.show();
+        return false;
+      }
+    });
 ```
 
+## Expandable
+
 ```java
-//expandable
 mRoot = new ArrayList<>();
 TreeNode<Genre> genre = new TreeNode<Genre>(new Genre("Jazz", R.drawable.ic_saxaphone);
 genre.addChilds(TreeNode ...);
@@ -122,11 +87,11 @@ TreeViewAdapter treeViewAdapter =
         //ToastUtil.show(getActivity(), "addOnTreeNodeClick");
       }
     });
-
 ```
 
+## Fastscroller
+
 ```java
-// fastscroller
     mRecyclerView.setAdapter(mItemAdapter);
 
     RecyclerFastScroller fastScroller = (RecyclerFastScroller) view.findViewById(R.id.fast_scroller);
@@ -139,8 +104,9 @@ TreeViewAdapter treeViewAdapter =
     fastScroller.setAccentColor(color);
 ```
 
+## Scroll Speed Control
+
 ```java
-// set scroll speed
 //#TopSnappedSmoothScroller#calculateSpeedPerPixel
 @Override
 protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
@@ -158,7 +124,30 @@ mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
     });
 ```
 
-Thanks
+## Paginate
+
+```java
+Paginate.Callbacks callbacks = new Paginate.Callbacks() {
+    @Override
+    public void onLoadMore() {
+        // Load next page of data (e.g. network or database)
+    }
+
+    @Override
+    public boolean isLoading() {
+        // Indicate whether new page loading is in progress or not
+        return loadingInProgress;
+    }
+
+    @Override
+    public boolean hasLoadedAllItems() {
+        // Indicate whether all data (pages) are loaded or not
+        return hasLoadedAllItems;
+    }
+};
+```
+
+Thanks&Links
 --------
 
 - [MarkoMilos/Paginate](https://github.com/MarkoMilos/Paginate)

@@ -3,7 +3,6 @@ package com.bobomee.android.recyclerviewhelperdemo.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -76,8 +75,9 @@ public class PaginateFragment extends BasePaginationFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    WrapperAdapter wrapperAdapter = new WrapperAdapter(mPaginateAdapter, LoadingListItemCreator.DEFAULT,
-        LoadingListItemCreator.DEFAULT_NO_DATA_ITEM_CREATOR);
+    WrapperAdapter wrapperAdapter =
+        new WrapperAdapter(mPaginateAdapter, LoadingListItemCreator.DEFAULT,
+            LoadingListItemCreator.DEFAULT_NO_DATA_ITEM_CREATOR);
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
     linearLayoutManager.setAutoMeasureEnabled(true);
 
@@ -87,12 +87,24 @@ public class PaginateFragment extends BasePaginationFragment {
 
     setupPagination();
 
-    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-      @Override public void onRefresh() {
-        resetPagination();
-        requestData(false);
-      }
-    });
+    final SwipeRefreshLayout.OnRefreshListener listener =
+        new SwipeRefreshLayout.OnRefreshListener() {
+          @Override public void onRefresh() {
+            resetPagination();
+            requestData(false);
+          }
+        };
+
+    if (null != mSwipeRefreshLayout) {
+      mSwipeRefreshLayout.setOnRefreshListener(listener);
+
+      mRecyclerView.post(new Runnable() {
+        @Override public void run() {
+          mSwipeRefreshLayout.setRefreshing(true);
+          listener.onRefresh();
+        }
+      });
+    }
   }
 
   @Override public void onDestroyView() {
@@ -102,13 +114,14 @@ public class PaginateFragment extends BasePaginationFragment {
 
   private void requestData(final boolean isLoadMore) {
 
-    new Handler().postDelayed(new Runnable() {
+    mRecyclerView.postDelayed(new Runnable() {
       @Override public void run() {
         evaluateValues();
-        if (isLoadMore){
-          mPaginateAdapter.addAll(DataProvider.provide(DEFAULT_PAGE_SIZE));
-        }else {
-          mPaginateAdapter.setData(DataProvider.provide(DEFAULT_PAGE_SIZE));
+        int itemCount = mPaginateAdapter.getItemCount();
+        if (isLoadMore) {
+          mPaginateAdapter.addAll(DataProvider.provide(itemCount, DEFAULT_PAGE_SIZE));
+        } else {
+          mPaginateAdapter.setData(DataProvider.provide(itemCount, DEFAULT_PAGE_SIZE));
         }
         loadComplete();
       }
@@ -117,7 +130,7 @@ public class PaginateFragment extends BasePaginationFragment {
 
   @Override protected void loadComplete() {
     super.loadComplete();
-    mSwipeRefreshLayout.setRefreshing(false);
+    if (null != mSwipeRefreshLayout) mSwipeRefreshLayout.setRefreshing(false);
   }
 
   private void evaluateValues() {

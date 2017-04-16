@@ -28,9 +28,9 @@ import java.util.List;
 
 public class DataProvider {
 
-  public static List<String> provide(int from) {
+  public static List<String> provide(int from,int pageSize) {
     List<String> result = new ArrayList<>();
-    for (int i = 0; i < from; i++) {
+    for (int i = from; i < from+pageSize; i++) {
       result.add(i + " ---> position");
     }
 
