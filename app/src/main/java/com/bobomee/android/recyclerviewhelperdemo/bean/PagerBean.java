@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import com.bobomee.android.recyclerviewhelperdemo.fragment.ExpandRecyclerFragment;
 import com.bobomee.android.recyclerviewhelperdemo.fragment.FastScrollFragment;
 import com.bobomee.android.recyclerviewhelperdemo.fragment.ItemClickFragment;
+import com.bobomee.android.recyclerviewhelperdemo.fragment.PaginateFragment;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class PagerBean {
     pagerBeens.add(new PagerBean("ClickMode", ItemClickFragment.newInstance()));
     pagerBeens.add(new PagerBean("Expanable", ExpandRecyclerFragment.newInstance()));
     pagerBeens.add(new PagerBean("FastScroller", FastScrollFragment.newInstance()));
+    pagerBeens.add(new PagerBean("Paginate", PaginateFragment.newInstance()));
 
     return pagerBeens;
   }

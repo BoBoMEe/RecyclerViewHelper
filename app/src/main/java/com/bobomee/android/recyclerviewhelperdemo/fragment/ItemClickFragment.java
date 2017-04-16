@@ -73,7 +73,7 @@ public class ItemClickFragment extends BackHandledFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    datas.addAll(DataProvider.provide(0));
+    datas.addAll(DataProvider.provide(20));
 
     initView(view);
     initAdapter();

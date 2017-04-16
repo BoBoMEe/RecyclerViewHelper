@@ -30,7 +30,7 @@ public class DataProvider {
 
   public static List<String> provide(int from) {
     List<String> result = new ArrayList<>();
-    for (int i = from; i < from+20; i++) {
+    for (int i = 0; i < from; i++) {
       result.add(i + " ---> position");
     }
 

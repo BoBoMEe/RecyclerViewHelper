@@ -17,6 +17,7 @@
 package com.bobomee.android.recyclerviewhelperdemo.recycler;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
   protected final Context mContext;
   protected LayoutInflater mInflater;
 
-  protected BaseRecyclerAdapter(List<T> data, Context context) {
+  protected BaseRecyclerAdapter(@NonNull List<T> data, Context context) {
     mData = data;
     mContext = context;
     mInflater = LayoutInflater.from(context);
