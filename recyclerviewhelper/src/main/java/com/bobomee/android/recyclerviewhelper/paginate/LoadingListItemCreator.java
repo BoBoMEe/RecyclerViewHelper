@@ -30,29 +30,86 @@ public interface LoadingListItemCreator {
    */
   void onBindViewHolder(RecyclerView.ViewHolder holder, int position);
 
-  LoadingListItemCreator DEFAULT = new LoadingListItemCreator() {
-    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-      View view =
-          LayoutInflater.from(parent.getContext()).inflate(R.layout.loading_row, parent, false);
-      return new RecyclerView.ViewHolder(view) {
-      };
+  /**
+   * the no data item create
+   */
+  public class DefaultLoadingNoDataItemCreator implements LoadingListItemCreator{
+
+    private final Paginate.Callbacks callBacks;
+
+    public DefaultLoadingNoDataItemCreator(Paginate.Callbacks callBacks) {
+      this.callBacks = callBacks;
     }
 
-    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-      // No binding for default loading row
-    }
-  };
-
-  LoadingListItemCreator DEFAULT_NO_DATA_ITEM_CREATOR = new LoadingListItemCreator() {
     @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       View view = LayoutInflater.from(parent.getContext())
           .inflate(R.layout.item_no_data_tip, parent, false);
-      return new RecyclerView.ViewHolder(view) {
+      return new DefaultLoadingNoDataItemViewHolder(view,callBacks) {
       };
     }
 
     @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
     }
-  };
+
+    class DefaultLoadingNoDataItemViewHolder extends RecyclerView.ViewHolder{
+
+      private final Paginate.Callbacks callbacks;
+
+      public DefaultLoadingNoDataItemViewHolder(View itemView, final Paginate.Callbacks callbacks) {
+        super(itemView);
+        this.callbacks = callbacks;
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+          @Override public void onClick(View v) {
+            if (!callbacks.isLoading() && !callbacks.hasLoadedAllItems()) {
+              callbacks.onLoadMore();
+            }
+          }
+        });
+      }
+    }
+  }
+
+  /**
+   * the progress item create
+   */
+  public class DefalutLoadingListItemCreator implements LoadingListItemCreator {
+
+    private final Paginate.Callbacks callBacks;
+
+    public DefalutLoadingListItemCreator(Paginate.Callbacks callbacks) {
+      this.callBacks = callbacks;
+    }
+
+    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      View view =
+          LayoutInflater.from(parent.getContext()).inflate(R.layout.loading_row, parent, false);
+      return new DefaultLoadingListItemViewHolder(view,callBacks){
+      };
+    }
+
+    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+    }
+
+    class DefaultLoadingListItemViewHolder extends RecyclerView.ViewHolder{
+
+      private final Paginate.Callbacks callbacks;
+
+      public DefaultLoadingListItemViewHolder(View itemView, final Paginate.Callbacks callbacks) {
+        super(itemView);
+        this.callbacks = callbacks;
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+          @Override public void onClick(View v) {
+            if (!callbacks.isLoading() && !callbacks.hasLoadedAllItems()) {
+                callbacks.onLoadMore();
+            }
+          }
+        });
+      }
+    }
+  }
+
 }

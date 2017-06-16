@@ -8,7 +8,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.View;
 
 /**
  * Project ID：400YF17050 <br/>
@@ -116,22 +115,12 @@ public final class RecyclerPaginate extends Paginate {
     }
 
     // Check if end of the list is reached (counting threshold) or if there is no items at all
-    if ((totalItemCount > visibleItemCount) && (totalItemCount - visibleItemCount) <= (
+    if ((totalItemCount > visibleItemCount && (totalItemCount - visibleItemCount) <= (
         firstVisibleItemPosition
-            + loadingTriggerThreshold) || totalItemCount == 0) {
+            + loadingTriggerThreshold)) || totalItemCount == 0) {
       if (!callbacks.isLoading() && !callbacks.hasLoadedAllItems()) {
         if (mAutoLoading) {
           callbacks.onLoadMore();
-        } else {
-          wrapperAdapter.setOnItemClickListener(new WrapperAdapter.OnItemClickListener() {
-            @Override public void onItemClick(View view, int position) {
-              callbacks.onLoadMore();
-            }
-
-            @Override public void onItemLongClick(View view, int position) {
-
-            }
-          });
         }
       }
     }
@@ -228,7 +217,7 @@ public final class RecyclerPaginate extends Paginate {
      * if 5.
      *
      * @param threshold number of items from the end of the list.
-     * @return {@link Builder}
+     * @return {@link RecyclerPaginate.Builder}
      */
     public Builder setLoadingTriggerThreshold(int threshold) {
       this.loadingTriggerThreshold = threshold;
@@ -245,8 +234,8 @@ public final class RecyclerPaginate extends Paginate {
      * row will be added.
      *
      * @param addLoadingListItem true if loading row needs to be added, false otherwise.
-     * @return {@link Builder}
-     * @see {@link Callbacks#hasLoadedAllItems()}
+     * @return {@link RecyclerPaginate.Builder}
+     * @see {@link Paginate.Callbacks#hasLoadedAllItems()}
      */
     public Builder addLoadingListItem(boolean addLoadingListItem) {
       this.addLoadingListItem = addLoadingListItem;
@@ -261,7 +250,7 @@ public final class RecyclerPaginate extends Paginate {
      *
      * @param loadingListItemSpanLookup LoadingListItemSpanLookup that will be called for loading
      * list item span.
-     * @return {@link Builder}
+     * @return {@link RecyclerPaginate.Builder}
      */
     public Builder setLoadingListItemSpanSizeLookup(
         LoadingListItemSpanLookup loadingListItemSpanLookup) {

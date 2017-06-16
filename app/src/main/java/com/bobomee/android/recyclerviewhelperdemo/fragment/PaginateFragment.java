@@ -75,9 +75,9 @@ public class PaginateFragment extends BasePaginationFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    WrapperAdapter wrapperAdapter =
-        new WrapperAdapter(mPaginateAdapter, LoadingListItemCreator.DEFAULT,
-            LoadingListItemCreator.DEFAULT_NO_DATA_ITEM_CREATOR);
+    WrapperAdapter wrapperAdapter = new WrapperAdapter(mPaginateAdapter,
+        new LoadingListItemCreator.DefalutLoadingListItemCreator(this),
+        new LoadingListItemCreator.DefaultLoadingNoDataItemCreator(this));
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
     linearLayoutManager.setAutoMeasureEnabled(true);
 
@@ -118,10 +118,13 @@ public class PaginateFragment extends BasePaginationFragment {
       @Override public void run() {
         evaluateValues();
         int itemCount = mPaginateAdapter.getItemCount();
+        int pageSize = DEFAULT_PAGE_SIZE;
         if (isLoadMore) {
-          mPaginateAdapter.addAll(DataProvider.provide(itemCount, DEFAULT_PAGE_SIZE));
+          int hasItems = mTotalItemCount - mCurrentPage * DEFAULT_PAGE_SIZE;
+          if (hasItems < DEFAULT_PAGE_SIZE) pageSize = hasItems;
+          mPaginateAdapter.addAll(DataProvider.provide(itemCount, pageSize));
         } else {
-          mPaginateAdapter.setData(DataProvider.provide(itemCount, DEFAULT_PAGE_SIZE));
+          mPaginateAdapter.setData(DataProvider.provide(0, DEFAULT_PAGE_SIZE));
         }
         loadComplete();
       }

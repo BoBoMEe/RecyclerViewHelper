@@ -23,7 +23,7 @@ public abstract class Paginate {
     /**
      * Called to check if loading of the next page is currently in progress. While loading is in
      * progress
-     * {@link Callbacks#onLoadMore} won't be called.
+     * {@link Paginate.Callbacks#onLoadMore} won't be called.
      *
      * @return true if loading is currently in progress, false otherwise.
      */
@@ -32,12 +32,13 @@ public abstract class Paginate {
     /**
      * Called to check if there is more data (more pages) to load. If there is no more pages to
      * load, {@link
-     * Callbacks#onLoadMore} won't be called and loading row, if used, won't
+     * Paginate.Callbacks#onLoadMore} won't be called and loading row, if used, won't
      * be added.
      *
      * @return true if all pages has been loaded, false otherwise.
      */
     boolean hasLoadedAllItems();
+
   }
 
   /**

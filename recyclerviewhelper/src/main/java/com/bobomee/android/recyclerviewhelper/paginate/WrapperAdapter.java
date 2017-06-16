@@ -5,7 +5,6 @@
 package com.bobomee.android.recyclerviewhelper.paginate;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.ViewGroup;
 
 /**
@@ -32,9 +31,9 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
    *
    * @param wrappedAdapter the wrapped adapter
    */
-  public WrapperAdapter(RecyclerView.Adapter wrappedAdapter) {
+  public WrapperAdapter(RecyclerView.Adapter wrappedAdapter, Paginate.Callbacks callbacks) {
     this.mWrappedAdapter = wrappedAdapter;
-    loadingListItemCreator = LoadingListItemCreator.DEFAULT;
+    loadingListItemCreator = new LoadingListItemCreator.DefalutLoadingListItemCreator(callbacks);
     noDataTip = null;
   }
 
@@ -66,49 +65,30 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     if (viewType == ITEM_VIEW_TYPE_LOADING) {
       return loadingListItemCreator.onCreateViewHolder(parent, viewType);
-    } else if (viewType == ITEM_VIEW_TYPE_NO_DATA) {
-      assert noDataTip != null;
+    } else if (viewType == ITEM_VIEW_TYPE_NO_DATA && null != noDataTip) {
       return noDataTip.onCreateViewHolder(parent, viewType);
     } else {
       return mWrappedAdapter.onCreateViewHolder(parent, viewType);
     }
   }
 
-  @Override public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+  @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     int type = getItemViewType(position);
     if (type == ITEM_VIEW_TYPE_LOADING) {
       loadingListItemCreator.onBindViewHolder(holder, position);
-      // 如果设置了回调，则设置点击事件
-      holder.itemView.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          int pos = holder.getLayoutPosition();
-          if (mOnItemClickListener != null) mOnItemClickListener.onItemClick(holder.itemView, pos);
-
-        }
-      });
-
-      holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-        @Override public boolean onLongClick(View v) {
-          int pos = holder.getLayoutPosition();
-          if (mOnItemClickListener != null) {
-            mOnItemClickListener.onItemLongClick(holder.itemView, pos);
-          }
-          return false;
-        }
-      });
-    } else if (type == ITEM_VIEW_TYPE_NO_DATA) {
-      // do nothing
-      if (noDataTip != null) noDataTip.onBindViewHolder(holder, position);
+    } else if (type == ITEM_VIEW_TYPE_NO_DATA && noDataTip != null) {
+      noDataTip.onBindViewHolder(holder, position);
     } else {
       mWrappedAdapter.onBindViewHolder(holder, position);
     }
   }
 
   @Override public int getItemCount() {
-    if (mDisplayLoadingRow || mDisplayNoDataRow) {
-      return mWrappedAdapter.getItemCount() + 1;
+    int itemCount = mWrappedAdapter.getItemCount();
+    if (itemCount > 0 && (mDisplayLoadingRow || mDisplayNoDataRow)) {
+      return itemCount + 1;
     } else {
-      return mWrappedAdapter.getItemCount();
+      return itemCount;
     }
   }
 
@@ -209,17 +189,5 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
   private int getLoadingRowPosition() {
     return mDisplayLoadingRow ? getItemCount() - 1 : -1;
-  }
-
-  public interface OnItemClickListener {
-    void onItemClick(View view, int position);
-
-    void onItemLongClick(View view, int position);
-  }
-
-  private OnItemClickListener mOnItemClickListener;
-
-  public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
-    this.mOnItemClickListener = mOnItemClickListener;
   }
 }
