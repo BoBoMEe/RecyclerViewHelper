@@ -49,9 +49,9 @@ import static com.bobomee.android.recyclerviewhelper.fastscroll.Utils.setTextBac
  */
 public class FastScroller extends FrameLayout {
 
-  protected TextView bubble;
-  protected ImageView handle;
-  protected int height;
+  TextView bubble;
+  ImageView handle;
+  int height;
   private boolean isInitialized = false;
   private ObjectAnimator currentAnimator;
   private BubbleTextCreator bubbleTextCreator;
@@ -70,7 +70,7 @@ public class FastScroller extends FrameLayout {
     init();
   }
 
-  protected void init() {
+  private void init() {
     if (isInitialized) return;
     isInitialized = true;
     setClipChildren(false);
@@ -155,11 +155,11 @@ public class FastScroller extends FrameLayout {
     return super.onTouchEvent(event);
   }
 
-  public void onScrollPosition(float _y) {
+  void onScrollPosition(float _y) {
 
   }
 
-  protected void setBubbleText(int _targetPos) {
+  void setBubbleText(int _targetPos) {
     if (bubble != null) {
       String bubbleText = bubbleTextCreator.onCreateBubbleText(_targetPos);
       if (bubbleText != null) {
@@ -171,7 +171,7 @@ public class FastScroller extends FrameLayout {
     }
   }
 
-  protected void setBubbleAndHandlePosition(float y) {
+  void setBubbleAndHandlePosition(float y) {
     int handleHeight = handle.getHeight();
     handle.setY(getValueInRange(0, height - handleHeight, (int) (y - handleHeight / 2)));
     if (bubble != null) {

@@ -26,7 +26,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
  */
 public class SmoothScrollStaggeredLayoutManager extends StaggeredGridLayoutManager {
 
-	private RecyclerView.SmoothScroller mSmoothScroller;
+	private final RecyclerView.SmoothScroller mSmoothScroller;
 
 	public SmoothScrollStaggeredLayoutManager(Context context, int spanCount) {
 		this(context, spanCount, VERTICAL);

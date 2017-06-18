@@ -22,7 +22,7 @@ package com.bobomee.android.recyclerviewhelper.listener;
  * @author bobomee.
  */
 
-public interface IListener<ListenerType> {
+interface IListener<ListenerType> {
 
   void addListener(ListenerType _listenerType);
 

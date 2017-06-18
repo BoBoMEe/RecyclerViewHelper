@@ -16,7 +16,7 @@ Android library for easy to use `RecyclerView`
 
 Gradle:
 ```groovy
-compile 'com.bobomee.android:recyclerviewhelper:1.0.7'
+compile 'com.bobomee.android:recyclerviewhelper:1.0.8'
 ```
 
 # Usage

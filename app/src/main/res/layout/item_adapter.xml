@@ -15,7 +15,9 @@
         android:layout_height="56dp"
         android:layout_marginTop="0dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp">
+        android:layout_marginRight="0dp"
+        tools:ignore="UselessParent"
+        >
 
         <View
            android:layout_alignParentBottom="true"
@@ -48,7 +50,9 @@
                     android:layout_marginRight="60dp"
                     android:singleLine="true"
                     android:textSize="15sp"
-                    android:textColor="@color/textlight" />
+                    android:textColor="@color/textlight"
+                    tools:ignore="Deprecated"
+                    />
              </LinearLayout>
 
             <RelativeLayout

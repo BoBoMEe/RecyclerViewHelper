@@ -32,7 +32,7 @@ public class ItemClick extends ListenerImpl<ItemClick.OnItemClickListener> {
   * Interface definition for a callback to be invoked when an item in the
   * RecyclerView has been clicked.
   */
-  public static interface OnItemClickListener {
+  public interface OnItemClickListener {
     /**
      * Callback method to be invoked when an item in the RecyclerView
      * has been clicked.

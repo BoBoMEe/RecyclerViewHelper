@@ -72,7 +72,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
   }
 
-  @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+  @SuppressWarnings("unchecked") @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     int type = getItemViewType(position);
     if (type == ITEM_VIEW_TYPE_LOADING) {
       loadingListItemCreator.onBindViewHolder(holder, position);

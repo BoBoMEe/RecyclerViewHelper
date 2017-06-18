@@ -33,7 +33,7 @@ public class ItemLongClick extends ListenerImpl<ItemLongClick.OnItemLongClickLis
    * Interface definition for a callback to be invoked when an item in the
    * RecyclerView has been clicked and held.
    */
-  public static interface OnItemLongClickListener {
+  public interface OnItemLongClickListener {
     /**
      * Callback method to be invoked when an item in the RecyclerView
      * has been clicked and held.

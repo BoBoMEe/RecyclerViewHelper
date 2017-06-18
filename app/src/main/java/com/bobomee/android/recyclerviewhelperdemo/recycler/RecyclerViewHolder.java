@@ -27,16 +27,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
-  private SparseArray<View> mViews;//集合类，layout里包含的View,以view的id作为key，value是view对象
-  private Context mContext;//上下文对象
+  private final SparseArray<View> mViews;//集合类，layout里包含的View,以view的id作为key，value是view对象
 
   public RecyclerViewHolder(Context context, View itemView) {
     super(itemView);
-    mContext = context;
+    Context context1 = context;
     mViews = new SparseArray<View>();
   }
 
-  private <T extends View> T findViewById(int viewId) {
+  @SuppressWarnings("unchecked") private <T extends View> T findViewById(int viewId) {
     View view = mViews.get(viewId);
     if (view == null) {
       view = itemView.findViewById(viewId);
@@ -45,7 +44,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     return (T) view;
   }
 
-  public View getView(int viewId) {
+  private View getView(int viewId) {
     return findViewById(viewId);
   }
 

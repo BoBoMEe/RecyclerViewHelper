@@ -19,10 +19,10 @@ import java.util.List;
  */
 public class PagerBean {
 
-  private String title;
-  private Fragment mFragment;
+  private final String title;
+  private final Fragment mFragment;
 
-  public PagerBean(String title, Fragment fragment) {
+  private PagerBean(String title, Fragment fragment) {
     this.title = title;
     mFragment = fragment;
   }

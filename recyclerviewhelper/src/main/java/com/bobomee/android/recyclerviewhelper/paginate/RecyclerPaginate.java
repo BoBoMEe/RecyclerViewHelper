@@ -35,9 +35,9 @@ public final class RecyclerPaginate extends Paginate {
    * @param addLoadingListItem the add loading list item
    * @param loadingListItemSpanLookup the loading list item span lookup
    */
-  RecyclerPaginate(RecyclerView recyclerView, Callbacks callbacks, int loadingTriggerThreshold,
-      boolean addLoadingListItem, LoadingListItemSpanLookup loadingListItemSpanLookup,
-      boolean autoLoading) {
+  private RecyclerPaginate(RecyclerView recyclerView, Callbacks callbacks,
+      int loadingTriggerThreshold, boolean addLoadingListItem,
+      LoadingListItemSpanLookup loadingListItemSpanLookup, boolean autoLoading) {
     this.recyclerView = recyclerView;
     this.callbacks = callbacks;
     this.loadingTriggerThreshold = loadingTriggerThreshold;

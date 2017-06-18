@@ -28,7 +28,7 @@ import java.util.List;
  * @author bobomee.
  */
 
-public class PageAdapter extends FragmentPagerAdapter {
+class PageAdapter extends FragmentPagerAdapter {
 
   private final List<PagerBean> pagerBeans;
 

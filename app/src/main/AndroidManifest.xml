@@ -6,11 +6,13 @@
   <uses-sdk tools:overrideLibrary="com.bobomee.android.common"/>
 
   <application
+      android:name=".App"
       android:allowBackup="true"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:supportsRtl="true"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      tools:ignore="AllowBackup,GoogleAppIndexingWarning">
     <activity android:name=".pager.PagerActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>

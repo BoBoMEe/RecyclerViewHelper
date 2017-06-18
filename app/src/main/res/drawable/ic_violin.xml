@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-  android:height="35dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:height="35dp"
   android:viewportHeight="35"
   android:viewportWidth="35"
-  android:width="35dp">
+  android:width="35dp"
+    tools:ignore="UnusedResources">
 
   <group
     android:translateX="24.500000">

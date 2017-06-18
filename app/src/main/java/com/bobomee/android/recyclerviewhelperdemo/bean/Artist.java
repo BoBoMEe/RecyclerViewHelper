@@ -23,13 +23,13 @@ import com.bobomee.android.recyclerviewhelperdemo.R;
 
 public class Artist implements Parcelable ,LayoutItemType{
 
-  private String name;
+  private final String name;
 
   public Artist(String name) {
     this.name = name;
   }
 
-  protected Artist(Parcel in) {
+  private Artist(Parcel in) {
     name = in.readString();
   }
 
@@ -47,8 +47,7 @@ public class Artist implements Parcelable ,LayoutItemType{
   }
 
   @Override public int hashCode() {
-    int result = getName() != null ? getName().hashCode() : 0;
-    return result;
+    return getName() != null ? getName().hashCode() : 0;
   }
 
   @Override public void writeToParcel(Parcel dest, int flags) {

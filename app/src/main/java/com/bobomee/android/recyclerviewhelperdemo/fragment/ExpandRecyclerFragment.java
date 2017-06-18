@@ -47,7 +47,6 @@ import java.util.List;
 public class ExpandRecyclerFragment extends Fragment {
 
   private List<TreeNode> mRoot;
-  private RecyclerView rv;
 
   public static ExpandRecyclerFragment newInstance() {
     Bundle args = new Bundle();
@@ -72,7 +71,7 @@ public class ExpandRecyclerFragment extends Fragment {
   }
 
   private void initViews(View _view) {
-    rv = (RecyclerView) _view.findViewById(R.id.recycler_view);
+    RecyclerView rv = (RecyclerView) _view.findViewById(R.id.recycler_view);
     rv.setLayoutManager(new LinearLayoutManager(getActivity()));
     TreeViewAdapter treeViewAdapter =
         new TreeViewAdapter(mRoot, Arrays.asList(new ArtistViewBind(), new GenreViewBinder()));

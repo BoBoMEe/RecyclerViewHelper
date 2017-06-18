@@ -46,7 +46,7 @@ public class TreeNode<T extends LayoutItemType> {
     return height;
   }
 
-  public boolean isRoot() {
+  private boolean isRoot() {
     return parent == null;
   }
 

@@ -23,7 +23,7 @@ import com.bobomee.android.recyclerviewhelperdemo.R;
 
 public class Genre implements Parcelable ,LayoutItemType{
 
-  private int iconResId;
+  private final int iconResId;
   private String  title;
 
   public Genre(String title, int iconResId) {
@@ -31,7 +31,7 @@ public class Genre implements Parcelable ,LayoutItemType{
     this.iconResId = iconResId;
   }
 
-  protected Genre(Parcel in) {
+  private Genre(Parcel in) {
     iconResId = in.readInt();
   }
 

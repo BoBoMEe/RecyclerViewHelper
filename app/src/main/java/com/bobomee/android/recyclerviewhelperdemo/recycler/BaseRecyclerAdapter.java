@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerViewHolder> {
-  protected  List<T> mData;
-  protected final Context mContext;
-  protected LayoutInflater mInflater;
+  private List<T> mData;
+  private final Context mContext;
+  private final LayoutInflater mInflater;
 
   protected BaseRecyclerAdapter(@NonNull List<T> data, Context context) {
     mData = data;
@@ -36,9 +36,8 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
   }
 
   @Override public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    final RecyclerViewHolder holder = new RecyclerViewHolder(mContext,
+    return new RecyclerViewHolder(mContext,
         mInflater.inflate(getItemLayoutId(viewType), parent, false));
-    return holder;
   }
 
   @Override public void onBindViewHolder(RecyclerViewHolder holder, int position) {

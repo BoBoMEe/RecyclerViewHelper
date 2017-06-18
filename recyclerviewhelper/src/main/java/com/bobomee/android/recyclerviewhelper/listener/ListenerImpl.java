@@ -44,7 +44,7 @@ public class ListenerImpl<ListenerType> implements IListener<ListenerType> {
     mListenerTypes.remove(_listenerType);
   }
 
-  public List<ListenerType> from() {
+  protected List<ListenerType> from() {
     return mListenerTypes;
   }
 

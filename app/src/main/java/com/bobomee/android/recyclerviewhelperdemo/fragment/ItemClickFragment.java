@@ -50,10 +50,10 @@ public class ItemClickFragment extends BackHandledFragment {
   }
 
   private Toast mToast;
-  protected List<String> datas = new ArrayList<>();
+  private final List<String> datas = new ArrayList<>();
 
-  protected RecyclerView recyclerView;
-  protected BaseRecyclerAdapter<String> mBaseRecyclerAdapter;
+  private RecyclerView recyclerView;
+  private BaseRecyclerAdapter<String> mBaseRecyclerAdapter;
 
   private Activity mActivity;
 

@@ -16,11 +16,8 @@
 
 package com.bobomee.android.recyclerviewhelperdemo.fragment;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +28,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.bobomee.android.common.util.UIUtil;
 import com.bobomee.android.recyclerviewhelper.fastscroll.RecyclerFastScroller;
 import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.BubbleTextCreator;
 import com.bobomee.android.recyclerviewhelper.fastscroll.interfaces.OnScrollStateChange;
@@ -52,7 +50,7 @@ public class FastScrollFragment extends Fragment
 
   private RecyclerView mRecyclerView;
   private FloatingActionButton mFloatingActionButton;
-  Activity mActivity;
+  private Activity mActivity;
   private FastScrollAdapter mItemAdapter;
 
   public static FastScrollFragment newInstance() {
@@ -84,7 +82,7 @@ public class FastScrollFragment extends Fragment
     fastScroller.setRecyclerView(mRecyclerView);
     //fastScroller.addOnScrollStateChangeListener(this);
 
-    int color = getColorAccent(mActivity);
+    int color = UIUtil.getColor(R.color.colorAccent);
     fastScroller.setAccentColor(color);
 
     mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -92,14 +90,6 @@ public class FastScrollFragment extends Fragment
         mRecyclerView.smoothScrollToPosition(0);
       }
     });
-  }
-
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP) public static int getColorAccent(Context context) {
-    int accentAttr =  android.R.attr.colorAccent ;
-    TypedArray androidAttr = context.getTheme().obtainStyledAttributes(new int[] { accentAttr });
-    int colorAccent = androidAttr.getColor(0, 0xFF009688); //Default: material_deep_teal_500
-    androidAttr.recycle();
-    return colorAccent;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,7 +103,7 @@ public class FastScrollFragment extends Fragment
 
   class FastScrollAdapter extends BaseRecyclerAdapter<String> implements BubbleTextCreator{
 
-    protected FastScrollAdapter(List<String> data, Context context) {
+    FastScrollAdapter(List<String> data, Context context) {
       super(data, context);
     }
 
@@ -130,7 +120,7 @@ public class FastScrollFragment extends Fragment
     }
   }
 
-  private List<String> mDatas = new ArrayList<>();
+  private final List<String> mDatas = new ArrayList<>();
 
   private void prepareData() {
 

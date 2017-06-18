@@ -7,7 +7,7 @@
     android:gravity="center"
     android:paddingBottom="15dp"
     android:paddingTop="15dp"
-    android:text="已全部加载"
+    android:text="@string/load_all"
     android:textColor="#919191"
     android:textSize="14sp"
     />

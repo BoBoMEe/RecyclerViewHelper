@@ -28,7 +28,9 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    tools:src="@drawable/ic_banjo" />
+    tools:src="@drawable/ic_banjo"
+      tools:ignore="ContentDescription,RtlHardcoded"
+      />
 
   <TextView
       android:paddingLeft="65dp"
@@ -37,7 +39,9 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:gravity="center_vertical"
-    tools:text="Genre" />
+    tools:text="Genre"
+      tools:ignore="RtlHardcoded,RtlSymmetry"
+      />
 
   <ImageView
     android:id="@+id/list_item_genre_arrow"
@@ -45,7 +49,9 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|end"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:src="@drawable/ic_arrow_down" />
+    android:src="@drawable/ic_arrow_down"
+      tools:ignore="ContentDescription,RtlHardcoded"
+      />
 
 </FrameLayout>
 

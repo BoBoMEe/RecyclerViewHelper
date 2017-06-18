@@ -33,7 +33,7 @@ public interface LoadingListItemCreator {
   /**
    * the no data item create
    */
-  public class DefaultLoadingNoDataItemCreator implements LoadingListItemCreator{
+  class DefaultLoadingNoDataItemCreator implements LoadingListItemCreator{
 
     private final Paginate.Callbacks callBacks;
 
@@ -74,7 +74,7 @@ public interface LoadingListItemCreator {
   /**
    * the progress item create
    */
-  public class DefalutLoadingListItemCreator implements LoadingListItemCreator {
+  class DefalutLoadingListItemCreator implements LoadingListItemCreator {
 
     private final Paginate.Callbacks callBacks;
 

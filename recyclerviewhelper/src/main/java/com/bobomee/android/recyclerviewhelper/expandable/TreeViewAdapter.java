@@ -33,11 +33,11 @@ import java.util.List;
 public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     implements ExpandCollapseListener {
   private final List<? extends TreeViewBinder> viewBinders;
-  private List<TreeNode> displayNodes;
+  private final List<TreeNode> displayNodes;
   private boolean toCollapseChild;
 
-  private ExpandCollapse mExpandCollapse;
-  private TreeNodeClick mTreeNodeClick;
+  private final ExpandCollapse mExpandCollapse;
+  private final TreeNodeClick mTreeNodeClick;
 
   public TreeViewAdapter(List<TreeNode> nodes, List<? extends TreeViewBinder> viewBinders) {
     displayNodes = new ArrayList<>();
@@ -51,7 +51,8 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   private void findDisplayNodes(List<TreeNode> nodes) {
     for (TreeNode node : nodes) {
       displayNodes.add(node);
-      if (!node.isLeaf() && node.isExpand()) findDisplayNodes(node.getChildList());
+      if (!node.isLeaf() && node.isExpand()) //noinspection unchecked
+        findDisplayNodes(node.getChildList());
     }
   }
 
@@ -83,13 +84,14 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     });
     for (TreeViewBinder viewBinder : viewBinders) {
       if (viewBinder.getLayoutId() == displayNodes.get(position).getContent().getLayoutId()) {
+        //noinspection unchecked
         viewBinder.bindView(holder, position, displayNodes.get(position));
       }
     }
   }
 
   private int addChildNodes(TreeNode pNode, int startIndex) {
-    List<TreeNode> childList = pNode.getChildList();
+    @SuppressWarnings("unchecked") List<TreeNode> childList = pNode.getChildList();
     int addChildCount = 0;
     for (TreeNode treeNode : childList) {
       displayNodes.add(startIndex + addChildCount++, treeNode);
@@ -102,7 +104,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
   private int removeChildNodes(TreeNode pNode) {
     if (pNode.isLeaf()) return 0;
-    List<TreeNode> childList = pNode.getChildList();
+    @SuppressWarnings("unchecked") List<TreeNode> childList = pNode.getChildList();
     int removeChildCount = childList.size();
     displayNodes.removeAll(childList);
     for (TreeNode treeNode : childList) {

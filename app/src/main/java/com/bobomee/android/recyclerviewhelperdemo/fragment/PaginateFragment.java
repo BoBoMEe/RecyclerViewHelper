@@ -34,15 +34,15 @@ import java.util.List;
  */
 public class PaginateFragment extends BasePaginationFragment {
 
-  @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
-  @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout mSwipeRefreshLayout;
-  Unbinder unbinder;
+  @BindView(R.id.recyclerView)  RecyclerView mRecyclerView;
+  @BindView(R.id.swipeRefreshLayout)  SwipeRefreshLayout mSwipeRefreshLayout;
+  private Unbinder unbinder;
   private Activity mActivity;
   private PaginateAdapter mPaginateAdapter;
 
   private static final int DEFAULT_PAGE_SIZE = 20;
-  public static final int DEFAULT_TOTAL_COUNT = 45;
-  public static final int DEFAULT_TOTAL_PAGE = 3;
+  private static final int DEFAULT_TOTAL_COUNT = 45;
+  private static final int DEFAULT_TOTAL_PAGE = 3;
 
   public static PaginateFragment newInstance() {
     Bundle args = new Bundle();
@@ -143,7 +143,7 @@ public class PaginateFragment extends BasePaginationFragment {
 
   private class PaginateAdapter extends BaseRecyclerAdapter<String> {
 
-    protected PaginateAdapter(@NonNull List<String> data, Context context) {
+    PaginateAdapter(@NonNull List<String> data, Context context) {
       super(data, context);
     }
 

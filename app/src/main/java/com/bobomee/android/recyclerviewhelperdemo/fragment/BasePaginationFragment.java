@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import com.bobomee.android.recyclerviewhelper.paginate.Paginate;
+import com.bobomee.android.recyclerviewhelper.paginate.RecyclerPaginate;
 
 /**
  * Project ID：400YF17050
@@ -19,49 +20,38 @@ import com.bobomee.android.recyclerviewhelper.paginate.Paginate;
  */
 public abstract class BasePaginationFragment extends Fragment implements Paginate.Callbacks {
 
-  public abstract RecyclerView providerRecyclerview();//provider recyclerview
+  protected abstract RecyclerView providerRecyclerview();//provider recyclerview
 
-  protected boolean mLoading = false;                 //是否正在加载
+  private boolean mLoading = false;                 //是否正在加载
 
-  protected Handler mHandler = new Handler();         //Handler
-  protected Paginate mPaginate;                       //分页工具
+  private final Handler mHandler = new Handler();         //Handler
+  private Paginate mPaginate;                       //分页工具
 
-  protected int mCurrentPage = 0;                     //当前页数
-  protected int mTotalPage;                           //总页数
-  protected int mTotalItemCount;                      //总条目
+  int mCurrentPage = 0;                     //当前页数
+  int mTotalPage;                           //总页数
+  int mTotalItemCount;                      //总条目
 
-  protected boolean mIsRequested = false;             //是否请求过
+  private boolean mIsRequested = false;             //是否请求过
 
-  protected void loadError() {
-    mIsRequested = false;
-    if (mTotalPage == 0 && mCurrentPage == 0) {
-      //第一次加载
-      return;
-    }
-    mPaginate.setHasMoreDataToLoad(false);
-    mLoading = false;
-  }
-
-  protected void loadComplete() {
+  void loadComplete() {
     mIsRequested = true;
-
     mLoading = false;
   }
 
   /**
    * 设置分页加载器
    */
-  protected void setupPagination() {
+  void setupPagination() {
     if (mPaginate != null) {
       mPaginate.unbind();
     }
     resetPagination();
-    mPaginate = Paginate.with(providerRecyclerview(), this).build();
+    mPaginate = paginateBuilder().build();
 
     mPaginate.setHasMoreDataToLoad(false);
   }
 
-  protected void resetPagination() {
+  void resetPagination() {
     mHandler.removeCallbacks(fakeCallback);
     mLoading = false;
     mCurrentPage = 0;
@@ -69,19 +59,22 @@ public abstract class BasePaginationFragment extends Fragment implements Paginat
     mIsRequested = false;
   }
 
+  private RecyclerPaginate.Builder paginateBuilder() {
+    return Paginate.with(providerRecyclerview(), this);
+  }
+
   /**
    * 重新加载数据的runnable
    */
-  private Runnable fakeCallback = new Runnable() {
+  private final Runnable fakeCallback = new Runnable() {
     @Override public void run() {
       mCurrentPage++;
       // 重新请求
       requestMoreData();
-      mLoading = false;
     }
   };
 
-  public abstract void requestMoreData();
+  protected abstract void requestMoreData();
 
   /**
    * 加载更多功能

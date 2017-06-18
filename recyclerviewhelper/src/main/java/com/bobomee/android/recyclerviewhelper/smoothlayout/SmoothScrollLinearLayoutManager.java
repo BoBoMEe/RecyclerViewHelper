@@ -24,15 +24,15 @@ import android.support.v7.widget.RecyclerView;
  *
  * @since 5.0.0-b1
  */
-public class SmoothScrollLinearLayoutManager extends LinearLayoutManager {
+class SmoothScrollLinearLayoutManager extends LinearLayoutManager {
 
-	private RecyclerView.SmoothScroller mSmoothScroller;
+	private final RecyclerView.SmoothScroller mSmoothScroller;
 
 	public SmoothScrollLinearLayoutManager(Context context) {
 		this(context, VERTICAL, false);
 	}
 
-	public SmoothScrollLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+	private SmoothScrollLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
 		super(context, orientation, reverseLayout);
 		mSmoothScroller = new TopSnappedSmoothScroller(context, this);
 	}

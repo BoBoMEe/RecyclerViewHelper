@@ -24,15 +24,16 @@ import android.support.v7.widget.RecyclerView;
  *
  * @since 5.0.0-b6
  */
-public class SmoothScrollGridLayoutManager extends GridLayoutManager {
+class SmoothScrollGridLayoutManager extends GridLayoutManager {
 
-	private RecyclerView.SmoothScroller mSmoothScroller;
+	private final RecyclerView.SmoothScroller mSmoothScroller;
 
 	public SmoothScrollGridLayoutManager(Context context, int spanCount) {
 		this(context, spanCount, VERTICAL, false);
 	}
 
-	public SmoothScrollGridLayoutManager(Context context, int spanCount, int orientation, boolean reverseLayout) {
+	private SmoothScrollGridLayoutManager(Context context, int spanCount, int orientation,
+			boolean reverseLayout) {
 		super(context, spanCount, orientation, reverseLayout);
 		mSmoothScroller = new TopSnappedSmoothScroller(context, this);
 	}

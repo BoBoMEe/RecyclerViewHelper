@@ -14,7 +14,7 @@ import android.view.View;
  * @description
  */
 
-public abstract class ItemTouchListener extends RecyclerView.SimpleOnItemTouchListener {
+abstract class ItemTouchListener extends RecyclerView.SimpleOnItemTouchListener {
 
   private final GestureDetectorCompat mGestureDetectorCompat;
 

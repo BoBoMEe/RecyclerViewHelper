@@ -29,7 +29,7 @@ import com.bobomee.android.recyclerviewhelper.fastscroll.Utils;
  * @since 5.0.0-b6 Creation
  * <br/>5.0.0-b8 Class is now public to allow customization of the MILLISECONDS_PER_INCH
  */
-public class TopSnappedSmoothScroller extends LinearSmoothScroller {
+class TopSnappedSmoothScroller extends LinearSmoothScroller {
 
 	/**
 	 * The modification of this value affects the creation of ALL Layout Managers.
@@ -37,10 +37,10 @@ public class TopSnappedSmoothScroller extends LinearSmoothScroller {
 	 * and to assign it again to the RecyclerView!
 	 * <p>Default value is {@code 100f}. Default Android value is {@code 25f}.</p>
 	 */
-	public static float MILLISECONDS_PER_INCH = 100f;
+	private static final float MILLISECONDS_PER_INCH = 100f;
 
-	private PointF vectorPosition = new PointF(0, 0);
-	private RecyclerView.LayoutManager layoutManager;
+	private final PointF vectorPosition = new PointF(0, 0);
+	private final RecyclerView.LayoutManager layoutManager;
 
 	public TopSnappedSmoothScroller(Context context, RecyclerView.LayoutManager layoutManager) {
 		super(context);
