@@ -28,12 +28,47 @@ import java.util.List;
 
 public class DataProvider {
 
-  public static List<String> provide(int from,int pageSize) {
+  public static List<String> provide(int from, int pageSize) {
     List<String> result = new ArrayList<>();
-    for (int i = from; i < from+pageSize; i++) {
+    for (int i = from; i < from + pageSize; i++) {
       result.add(i + " ---> position");
     }
 
     return result;
+  }
+
+  public static class Data {
+    public int mTotalItemCount;
+    public int mTotalPage;
+    public int mCurrentPage;
+    public List<Content> mContent;
+
+    public static class Content {
+      public String mContent;
+    }
+  }
+
+  public static Data providePaginateData(int current, int pageSize, int total) {
+    Data data = new Data();
+
+    data.mTotalItemCount = total;
+    boolean zero = total % pageSize == 0;
+    int count = total / pageSize;
+    data.mTotalPage = zero ? count : count + 1;
+    data.mCurrentPage = current;
+    List<Data.Content> inner = new ArrayList<>();
+    data.mContent = inner;
+
+    int has = current * pageSize;
+    int need = total - has;
+    boolean b = need > pageSize;
+
+    for (int i = has; i < (has + (b ? pageSize : need)); i++) {
+      Data.Content content = new Data.Content();
+      content.mContent = i + " ---> position";
+      inner.add(content);
+    }
+
+    return data;
   }
 }

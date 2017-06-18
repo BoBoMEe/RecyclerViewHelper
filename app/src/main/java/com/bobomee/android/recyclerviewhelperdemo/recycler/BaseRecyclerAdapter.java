@@ -29,6 +29,12 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
   private final Context mContext;
   private final LayoutInflater mInflater;
 
+  public BaseRecyclerAdapter(Context context) {
+    mData = new ArrayList<>();
+    mContext = context;
+    mInflater = LayoutInflater.from(context);
+  }
+
   protected BaseRecyclerAdapter(@NonNull List<T> data, Context context) {
     mData = data;
     mContext = context;

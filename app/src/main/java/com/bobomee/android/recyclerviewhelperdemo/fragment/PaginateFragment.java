@@ -3,7 +3,6 @@ package com.bobomee.android.recyclerviewhelperdemo.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,8 +19,6 @@ import com.bobomee.android.recyclerviewhelperdemo.R;
 import com.bobomee.android.recyclerviewhelperdemo.recycler.BaseRecyclerAdapter;
 import com.bobomee.android.recyclerviewhelperdemo.recycler.DataProvider;
 import com.bobomee.android.recyclerviewhelperdemo.recycler.RecyclerViewHolder;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Project ID：400YF17051<br/>
@@ -34,15 +31,14 @@ import java.util.List;
  */
 public class PaginateFragment extends BasePaginationFragment {
 
-  @BindView(R.id.recyclerView)  RecyclerView mRecyclerView;
-  @BindView(R.id.swipeRefreshLayout)  SwipeRefreshLayout mSwipeRefreshLayout;
+  @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
+  @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout mSwipeRefreshLayout;
   private Unbinder unbinder;
   private Activity mActivity;
   private PaginateAdapter mPaginateAdapter;
 
   private static final int DEFAULT_PAGE_SIZE = 20;
   private static final int DEFAULT_TOTAL_COUNT = 45;
-  private static final int DEFAULT_TOTAL_PAGE = 3;
 
   public static PaginateFragment newInstance() {
     Bundle args = new Bundle();
@@ -54,7 +50,7 @@ public class PaginateFragment extends BasePaginationFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mActivity = getActivity();
-    mPaginateAdapter = new PaginateAdapter(new ArrayList<String>(), mActivity);
+    mPaginateAdapter = new PaginateAdapter(mActivity);
   }
 
   @Override public RecyclerView providerRecyclerview() {
@@ -116,16 +112,17 @@ public class PaginateFragment extends BasePaginationFragment {
 
     mRecyclerView.postDelayed(new Runnable() {
       @Override public void run() {
-        evaluateValues();
-        int itemCount = mPaginateAdapter.getItemCount();
-        int pageSize = DEFAULT_PAGE_SIZE;
+        DataProvider.Data data =
+            DataProvider.providePaginateData(mCurrentPage, DEFAULT_PAGE_SIZE, DEFAULT_TOTAL_COUNT);
+
+        evaluateValues(data);
+
         if (isLoadMore) {
-          int hasItems = mTotalItemCount - mCurrentPage * DEFAULT_PAGE_SIZE;
-          if (hasItems < DEFAULT_PAGE_SIZE) pageSize = hasItems;
-          mPaginateAdapter.addAll(DataProvider.provide(itemCount, pageSize));
+          mPaginateAdapter.addAll(data.mContent);
         } else {
-          mPaginateAdapter.setData(DataProvider.provide(0, DEFAULT_PAGE_SIZE));
+          mPaginateAdapter.setData(data.mContent);
         }
+
         loadComplete();
       }
     }, 1500);
@@ -136,19 +133,21 @@ public class PaginateFragment extends BasePaginationFragment {
     if (null != mSwipeRefreshLayout) mSwipeRefreshLayout.setRefreshing(false);
   }
 
-  private void evaluateValues() {
-    mTotalItemCount = DEFAULT_TOTAL_COUNT;
-    mTotalPage = DEFAULT_TOTAL_PAGE;
+  private void evaluateValues(DataProvider.Data data) {
+    mTotalItemCount = data.mTotalItemCount;
+    mTotalPage = data.mTotalPage;
+    mCurrentPage = data.mCurrentPage;
   }
 
-  private class PaginateAdapter extends BaseRecyclerAdapter<String> {
+  private class PaginateAdapter extends BaseRecyclerAdapter<DataProvider.Data.Content> {
 
-    PaginateAdapter(@NonNull List<String> data, Context context) {
-      super(data, context);
+    PaginateAdapter(Context context) {
+      super(context);
     }
 
-    @Override public void bindData(RecyclerViewHolder holder, int position, String item) {
-      holder.setText(R.id.tvItemName, item);
+    @Override
+    public void bindData(RecyclerViewHolder holder, int position, DataProvider.Data.Content item) {
+      holder.setText(R.id.tvItemName, item.mContent);
     }
 
     @Override public int getItemLayoutId(int viewType) {
